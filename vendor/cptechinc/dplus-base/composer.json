@@ -1,0 +1,20 @@
+{
+	"name": "cptechinc/dpluso-processwire-classes",
+    "type": "library",
+    "description": "Classes for Dplus Online",
+    "keywords": ["crm"],
+    "homepage": "http://github.com/cptechinc/dpluso-processwire-classes",
+	"autoload": {
+		"files": [
+			"src/traits/CreateFromObjectArray.trait.php",
+			"src/traits/CreateClassArray.trait.php",
+			"src/traits/AttributeParser.trait.php",
+			"src/traits/ThrowError.trait.php",
+			"src/traits/MagicMethods.trait.php",
+			"src/traits/Filterable.trait.php",
+			"src/DplusDateTime.class.php",
+			"src/Stringer.class.php",
+			"src/QueryBuilder.class.php"
+		]
+	}
+}

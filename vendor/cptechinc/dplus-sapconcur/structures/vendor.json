@@ -1,0 +1,138 @@
+{
+    "VendorCode": {
+        "dbcolumn": "",
+        "required": false
+    },
+    "VendorName": {
+        "dbcolumn": "",
+        "required": false
+    },
+    "AddressCode": {
+        "dbcolumn": "",
+        "required": false
+    },
+    "Address1": {
+        "dbcolumn": "",
+        "required": false
+    },
+    "Address2": {
+        "dbcolumn": "",
+        "required": false
+    },
+    "Address3": {
+        "dbcolumn": "",
+        "required": false
+    },
+    "City": {
+        "dbcolumn": "",
+        "required": false
+    },
+    "State": {
+        "dbcolumn": "",
+        "required": false
+    },
+    "PostalCode": {
+        "dbcolumn": "",
+        "required": false
+    },
+    "CountryCode": {
+        "dbcolumn": "",
+        "required": false
+    },
+    "Country": {
+        "dbcolumn": "",
+        "required": false
+    },
+    "Approved": {
+        "dbcolumn": "",
+        "required": false
+    },
+    "PaymentTerms": {
+        "dbcolumn": "",
+        "required": false
+    },
+    "AccountNumber": {
+        "dbcolumn": "",
+        "required": false
+    },
+    "TaxID": {
+        "dbcolumn": "",
+        "required": false
+    },
+    "ProvincialTaxID": {
+        "dbcolumn": "",
+        "required": false
+    },
+    "TaxType": {
+        "dbcolumn": "",
+        "required": false
+    },
+    "CurrencyCode": {
+        "dbcolumn": "",
+        "required": false
+    },
+    "ShippingMethod": {
+        "dbcolumn": "",
+        "required": false
+    },
+    "ShippingTerms": {
+        "dbcolumn": "",
+        "required": false
+    },
+    "DiscountTermsDays": {
+        "dbcolumn": "",
+        "required": false
+    },
+    "DiscountPercentage": {
+        "dbcolumn": "",
+        "required": false
+    },
+    "ContactFirstName": {
+        "dbcolumn": "",
+        "required": false
+    },
+    "ContactLastName": {
+        "dbcolumn": "",
+        "required": false
+    },
+    "ContactPhoneNumber": {
+        "dbcolumn": "",
+        "required": false
+    },
+    "ContactEmail": {
+        "dbcolumn": "",
+        "required": false
+    },
+    "PurchaseOrderContactFirstName": {
+        "dbcolumn": "",
+        "required": false
+    },
+    "PurchaseOrderContactLastName": {
+        "dbcolumn": "",
+        "required": false
+    },
+    "PurchaseOrderContactPhoneNumber": {
+        "dbcolumn": "",
+        "required": false
+    },
+    "PurchaseOrderContactEmail": {
+        "dbcolumn": "",
+        "required": false
+    },
+    "DefaultEmployeeID": {
+        "dbcolumn": "",
+        "required": false
+    },
+    "DefaultExpenseTypeName": {
+        "dbcolumn": "",
+        "required": false
+    },
+    "PaymentMethodType": {
+        "dbcolumn": "",
+        "required": false
+    },
+    "AddressImportSyncID": {
+        "dbcolumn": "",
+        "required": false
+    }
+}

@@ -1,0 +1,18 @@
+# Adobe Dreamweaver added files
+_notes
+_compareTemp
+dwsync.xml
+dw_php_codehinting.config
+*.mno
+
+# Project Configurations
+.ftpconfig
+.ftpignore
+site/config.php
+project.cson
+vendor/composer
+
+# Processwire Directories
+site/modules
+site/assets
+wire

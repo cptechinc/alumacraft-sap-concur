@@ -1,0 +1,12 @@
+{
+	"name": "cptechinc/dpluso-processwire-classes",
+    "type": "library",
+    "description": "Classes for Dplus Online",
+    "keywords": ["crm"],
+    "homepage": "http://github.com/cptechinc/dpluso-processwire-classes",
+	"autoload": {
+		"files": [
+			"src/DplusWire.class.php"
+		]
+	}
+}

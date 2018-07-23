@@ -1,0 +1,16 @@
+{
+	"name": "cptechinc/dpluso-sapconcur",
+    "type": "library",
+    "description": "Classes for Dplus Online",
+    "keywords": ["crm"],
+    "homepage": "http://github.com/cptechinc/dpluso-processwire-classes",
+	"autoload": {
+		"files": [
+			"src/traits/ConstructAccessToken.trait.php",
+			"src/SapConcur.class.php",
+			"src/Concur_Authentication.class.php",
+			"src/Concur_Vendor.class.php",
+			"src/ConcurFactory.class.php"
+		]
+	}
+}
