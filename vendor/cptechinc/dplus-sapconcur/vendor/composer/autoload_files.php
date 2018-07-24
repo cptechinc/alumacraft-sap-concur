@@ -7,6 +7,8 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'ec9621033dab80ff39c3e5e9378373a8' => $baseDir . '/src/traits/ConstructAccessToken.trait.php',
+    '8647c1624bc8ab6b0ec208d554e6d6b0' => $baseDir . '/src/traits/StructuredClass.trait.php',
+    '3c1516d65ae3f74a7c5edb432d5daf17' => $baseDir . '/src/interfaces/StructuredClass.interface.php',
     '27312a52e972b27b13af16ddd7bd2799' => $baseDir . '/src/SapConcur.class.php',
     '7e615b33cf160d8e581392b7fe6dbb53' => $baseDir . '/src/Concur_Authentication.class.php',
     '6afa9f6a3634116681663f6bbdf1c4d6' => $baseDir . '/src/Concur_Vendor.class.php',

@@ -1,4 +1,7 @@
 <?php 
+	/**
+	 * Template Class to build endpoint classes from and extend
+	 */
 	abstract class Concur_Endpoint {
 		use MagicMethodTraits;
 		use ThrowErrorTrait;
@@ -20,18 +23,6 @@
 		 * @var array
 		 */
 		protected $response;
-		
-		/**
-		 * Array containing the Properties of each column
-		 * @var array
-		 */
-		protected $structure;
-		
-		/**
-		 * Directory of the JSON structure files for each structure type
-		 * @var string
-		 */
-		protected $structuredirectory =  __DIR__.'/../structures/';
 		
 		/**
 		 * Sends POST cURL request
