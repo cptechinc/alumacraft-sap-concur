@@ -8,7 +8,6 @@
 		"files": [
 			"src/traits/ConstructAccessToken.trait.php",
 			"src/traits/StructuredClass.trait.php",
-			"src/interfaces/StructuredClass.interface.php",
 			"src/SapConcur.class.php",
 			"src/Concur_Authentication.class.php",
 			"src/Concur_Vendor.class.php",

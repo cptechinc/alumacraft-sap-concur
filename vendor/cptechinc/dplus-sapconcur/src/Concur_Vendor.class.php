@@ -2,13 +2,51 @@
 	/**
 	 * Class to handle dealing with Vendors 
 	 */
-	class Concur_Vendor extends Concur_Endpoint implements StructuredClass {
+	class Concur_Vendor extends Concur_Endpoint {
 		use ConstructAccessToken;
-		use StructuredClass;
+		use StructuredClassTraits;
 		
-		protected $structurefile = 'vendor';
 		protected $endpoints = array(
 			'vendor' => 'https://www.concursolutions.com/api/v3.0/invoice/vendors'
+		);
+		
+		protected $structure = array(
+			'header' => array(
+				'VendorCode' 						=> array('dbcolumn' => '', 'required' => false),
+				'VendorName' 						=> array('dbcolumn' => '', 'required' => false),
+				'AddressCode' 						=> array('dbcolumn' => '', 'required' => false),
+				'Address1' 							=> array('dbcolumn' => '', 'required' => false),
+				'Address2' 							=> array('dbcolumn' => '', 'required' => false),
+				'Address3' 							=> array('dbcolumn' => '', 'required' => false),
+				'City' 								=> array('dbcolumn' => '', 'required' => false),
+				'State' 							=> array('dbcolumn' => '', 'required' => false),
+				'PostalCode' 						=> array('dbcolumn' => '', 'required' => false),
+				'CountryCode' 						=> array('dbcolumn' => '', 'required' => false),
+				'Country' 							=> array('dbcolumn' => '', 'required' => false),
+				'Approved' 							=> array('dbcolumn' => '', 'required' => false),
+				'PaymentTerms' 						=> array('dbcolumn' => '', 'required' => false),
+				'AccountNumber' 					=> array('dbcolumn' => '', 'required' => false),
+				'TaxID' 							=> array('dbcolumn' => '', 'required' => false),
+				'ProvincialTaxID' 					=> array('dbcolumn' => '', 'required' => false),
+				'TaxType' 							=> array('dbcolumn' => '', 'required' => false),
+				'CurrencyCode' 						=> array('dbcolumn' => '', 'required' => false),
+				'ShippingMethod' 					=> array('dbcolumn' => '', 'required' => false),
+				'ShippingTerms' 					=> array('dbcolumn' => '', 'required' => false),
+				'DiscountTermsDays' 				=> array('dbcolumn' => '', 'required' => false),
+				'DiscountPercentage' 				=> array('dbcolumn' => '', 'required' => false),
+				'ContactFirstName' 					=> array('dbcolumn' => '', 'required' => false),
+				'ContactLastName' 					=> array('dbcolumn' => '', 'required' => false),
+				'ContactPhoneNumber' 				=> array('dbcolumn' => '', 'required' => false),
+				'ContactEmail' 						=> array('dbcolumn' => '', 'required' => false),
+				'PurchaseOrderContactFirstName' 	=> array('dbcolumn' => '', 'required' => false),
+				'PurchaseOrderContactLastName' 		=> array('dbcolumn' => '', 'required' => false),
+				'PurchaseOrderContactPhoneNumber' 	=> array('dbcolumn' => '', 'required' => false),
+				'PurchaseOrderContactEmail' 		=> array('dbcolumn' => '', 'required' => false),
+				'DefaultEmployeeID' 				=> array('dbcolumn' => '', 'required' => false),
+				'DefaultExpenseTypeName' 			=> array('dbcolumn' => '', 'required' => false),
+				'PaymentMethodType' 				=> array('dbcolumn' => '', 'required' => false),
+				'AddressImportSyncID' 				=> array('dbcolumn' => '', 'required' => false)
+			)
 		);
 		
 		/**
@@ -50,7 +88,7 @@
 		 */
 		public function update_vendor($vendorID) {
 			$dbvendor = get_dbvendor($vendorID);
-			$vendor = $this->map_arraytostructure($dbvendor);
+			$vendor = $this->map_arraytostructuresection($dbvendor, 'header');
 			$body = $this->get_vendorsendschema();
 			$body['Items'][] = $vendor;
 			$body['TotalCount'] = 1;
@@ -65,7 +103,7 @@
 		 */
 		public function add_vendor($vendorID) {
 			$dbvendor = get_dbvendor($vendorID);
-			$vendor = $this->map_arraytostructure($dbvendor);
+			$vendor = $this->map_arraytostructuresection($dbvendor, 'header');
 			$body = $this->get_vendorsendschema();
 			$body['Items'][] = $vendor;
 			$body['TotalCount'] = 1;
