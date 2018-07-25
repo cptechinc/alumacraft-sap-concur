@@ -11,6 +11,7 @@
 			"src/SapConcur.class.php",
 			"src/Concur_Authentication.class.php",
 			"src/Concur_Vendor.class.php",
+			"src/Concur_PurchaseOrder.class.php",
 			"src/ConcurFactory.class.php"
 		]
 	}

@@ -24,7 +24,8 @@
 		 */
 		protected $endpoints = array(
 			'authentication' => 'Concur_Authentication',
-			'vendor' => 'Concur_Vendor'
+			'vendor' => 'Concur_Vendor',
+			'purchase-order' => 'Concur_PurchaseOrder'
 		);
 		
 		/**

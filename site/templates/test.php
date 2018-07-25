@@ -2,5 +2,5 @@
     header('Content-Type: application/json');
     $sap = new ConcurFactory();
     
-    $vendorendpoint = $sap->create_endpoint('vendor');
-    echo json_encode($vendorendpoint->get_vendor('8628'));
+    $vendorendpoint = $sap->create_endpoint('purchase-order');
+    echo json_encode($vendorendpoint->create_purchaseorder('1500'));

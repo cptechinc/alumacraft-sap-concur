@@ -25,4 +25,31 @@
 			}
 			return $structuredarray;
 		}
+		
+		protected function create_sectionarray($structure, $values) {
+			$structuredarray = array();
+			
+			foreach ($structure as $field => $fieldproperties) {
+				if (isset($fieldproperties['dbcolumn'])) {
+					$structuredarray[$field] = $this->format_value($values, $field, $fieldproperties);
+				} else {
+					$structuredarray[$field] = $this->create_sectionarray($structure[$field], $values);
+				}
+			}
+			return $structuredarray;
+		}
+		
+		protected function format_value($values, $field, $fieldproperties) {
+			$field = !empty($fieldproperties['dbcolumn']) ? $fieldproperties['dbcolumn'] : $field;
+			
+            if (isset($fieldproperties['format'])) {
+                switch ($fieldproperties['format']) {
+                    case 'date':
+                        return date($fieldproperties['date-format'], strtotime($values[$field]));
+                        break;
+                }
+            } else {
+                return $values[$field];
+            }
+        }
 	}
