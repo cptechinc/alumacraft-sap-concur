@@ -7,13 +7,14 @@
         use StructuredClassTraits;
         
         protected $endpoints = array(
-			'purchase-orders' => 'https://www.concursolutions.com/api/v3.0/invoice/purchaseorders '
+			'purchase-order' => 'https://www.concursolutions.com/api/v3.0/invoice/purchaseorders '
 		);
         
+        /**
+         * Structure of Purchase Order
+         * @var array
+         */
         protected $structure = array(
-            'sections' => array(
-                'header' => array('BillToAddress', 'ShipToAddress')
-            ),
             'header' => array(
                 'BillToAddress' => array(
                     'Address1'          => array('dbcolumn' => 'billtoAddress1', 'required' => false),
@@ -60,19 +61,52 @@
         );
         
         /**
-		 * Sends a PUT request to add Vendor at Concur
-		 * @param  string $ponbr Vendor ID to use to load from database
-		 * @return array            Response
+		 * Sends a POST request to add Purchase Order at Concur
+		 * @param  string $ponbr Purchase Order Number
+		 * @return array         Response
 		 */
 		public function create_purchaseorder($ponbr) {
-			return $this->create_purchaseorderheader($ponbr);
+			$purchaseorder =$this->create_purchaseorderheader($ponbr);
+            $purchaseorder['LineItem'] = $this->create_purchaseorderdetails($ponbr);
+            return $this->post_curl($this->endpoints['purchase-order'], $purchaseorder, $json = true);
 		}
         
+        /**
+         * Sends a PUT request to update Purchase Order at Concur
+         * @param  string $ponbr Purchase Order Number
+         * @return array         Response
+         */
+        public function update_purchaseorder($ponbr) {
+            $purchaseorder =$this->create_purchaseorderheader($ponbr);
+            $purchaseorder['LineItem'] = $this->create_purchaseorderdetails($ponbr);
+            return $this->put_curl($this->endpoints['purchase-order'], $purchaseorder, $json = true);
+        }
+        
+        /**
+         * Gets Purchase Order header from Database and apply it to the structure needed
+         * @param  string $ponbr Purchase Order Number
+         * @return array         Array in the Header array Structure
+         */
         protected function create_purchaseorderheader($ponbr) {
-            $purchaseorder = get_dbpurchaseorder($ponbr);
-            
+            $purchaseorder = get_dbpurchaseorderheader($ponbr);
             return $this->create_sectionarray($this->structure['header'], $purchaseorder);
         }
         
-        
+        /**
+         * Gets the Purchase Order Details and foreach one puts them in the detail
+         * structure needed then returns an array of all of them
+         * @param  string $ponbr Purchase Order Number
+         * @return array         Details in the detail array Structure
+         */
+        protected function create_purchaseorderdetails($ponbr) {
+            $lines = array();
+            $details = get_dbpurchaseorderdetails($ponbr);
+            
+            foreach ($details as $detail) {
+                $line = $this->create_sectionarray($this->structure['detail'], $detail);
+                $line['Allocation'] = array(array('Amount' => $detail['LineTotal']));
+                $lines[] = $line;
+            }
+            return $lines;
+        }
     }

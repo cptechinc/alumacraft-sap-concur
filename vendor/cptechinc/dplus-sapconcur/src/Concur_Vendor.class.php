@@ -10,6 +10,10 @@
 			'vendor' => 'https://www.concursolutions.com/api/v3.0/invoice/vendors'
 		);
 		
+		/**
+		 * Structure for Vendor Array
+		 * @var array
+		 */
 		protected $structure = array(
 			'header' => array(
 				'VendorCode' 						=> array('dbcolumn' => '', 'required' => false),
@@ -97,7 +101,7 @@
 		}
 		
 		/**
-		 * Sends a PUT request to add Vendor at Concur
+		 * Sends a POST request to add Vendor at Concur
 		 * @param  string $vendorID Vendor ID to use to load from database
 		 * @return array            Response
 		 */

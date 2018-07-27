@@ -128,4 +128,11 @@
 			}
 			return $this->response;
 		}
+		
+		public function log_error($error) {
+			$date = date("Y-m-d h:m:s");
+			$class = get_class();
+			$message = "[{$date}] [{$class}] $error";
+			DplusWire::wire('log')->save('sap-errors', $message);
+		}
 	}
