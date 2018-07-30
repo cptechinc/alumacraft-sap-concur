@@ -174,4 +174,24 @@
             $replacewith = array('%', '');
             return '%'.str_replace($replace, $replacewith, $keyword).'%';;
         }
+        
+        /**
+         * Parses the Paramterized query provided by $this->render()
+         * Returns it in a Easy to read format with SQL keywords in CAPS and spaces after commas
+         * @return string SQL Query
+         */
+        public function generate_sqlquery() {
+            $sql = $this->render();
+            $sql = str_replace(',', ', ', $sql);
+            $sql = str_replace('!=', ' != ', $sql);
+            $sql = str_replace('`=``', '` = `', $sql);
+            foreach ($this->params as $param => $value) {
+                $sql = str_replace($param, "'".$value."'", $sql);
+            }
+
+            foreach ($this->sqlkeywords as $keyword) {
+                $sql = preg_replace('/\b'.$keyword.'\b/', strtoupper($keyword), $sql);
+            }
+            return $sql;
+        }
     }

@@ -7,7 +7,7 @@
         use StructuredClassTraits;
         
         protected $endpoints = array(
-			'purchase-order' => 'https://www.concursolutions.com/api/v3.0/invoice/purchaseorders '
+			'purchase-order' => 'https://www.concursolutions.com/api/v3.0/invoice/purchaseorders'
 		);
         
         /**
@@ -66,7 +66,7 @@
 		 * @return array         Response
 		 */
 		public function create_purchaseorder($ponbr) {
-			$purchaseorder =$this->create_purchaseorderheader($ponbr);
+			$purchaseorder = $this->create_purchaseorderheader($ponbr);
             $purchaseorder['LineItem'] = $this->create_purchaseorderdetails($ponbr);
             return $this->post_curl($this->endpoints['purchase-order'], $purchaseorder, $json = true);
 		}

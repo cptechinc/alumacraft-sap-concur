@@ -129,7 +129,7 @@
 			return $this->response;
 		}
 		
-		public function log_error($error) {
+		protected function log_error($error) {
 			$date = date("Y-m-d h:m:s");
 			$class = get_class();
 			$message = "[{$date}] [{$class}] $error";
