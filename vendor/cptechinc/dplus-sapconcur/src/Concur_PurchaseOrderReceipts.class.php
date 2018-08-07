@@ -22,6 +22,32 @@
         );
         
         /**
+         * Sends PUT Request to update a Purchase Order with receipt data 
+         * for a Purchase Order Line
+         * @param string $ponbr      Purchase Order Number
+         * @param int    $linenumber Line Number
+         */
+        public function add_receipt($ponbr, $linenumber) {
+            $receipt = get_dbreceipt($ponbr, $linenumber);
+            $data = $this->create_sectionarray($this->structure['header'], $receipt);
+            $this->response = $this->put_curl($this->endpoints['receipts'], $data, $json = true);
+            $this->process_response();
+            return $this->response;
+        }
+        
+        /**
+         * Gets all the PO Numbers
+         * @return array Generated Response
+         */
+        public function batch_addreceipts() {
+            $purchaseordernumbers = get_dbdistinctreceiptponbrs();
+            
+            foreach ($purchaseordernumbers as $ponbr) {
+                $this->add_receiptsforpo($ponbr);
+            }
+        }
+        
+        /**
          * Adds all the receipts necessary for one Purchase Order
          * @param string $ponbr Purchase Order Number
          */
@@ -34,26 +60,16 @@
         }
         
         /**
-         * Sends PUT Request to update a Purchase Order with receipt data 
-         * for a Purchase Order Line
-         * @param string $ponbr      Purchase Order Number
-         * @param int    $linenumber Line Number
+         * Processes Response and logs Errors if needed
+         * @return void
          */
-        public function add_receipt($ponbr, $linenumber) {
-            $receipt = get_dbreceipt($ponbr, $linenumber);
-            $data = $this->create_sectionarray($this->structure['header'], $receipt);
-            return $this->put_curl($this->endpoints['receipt'], $data, $json = true);
-        }
-        
-        /**
-         * Gets all the PO Numbers
-         * @return [type] [description]
-         */
-        public function batch_addreceipts() {
-            $purchaseordernumbers = get_dbdistinctreceiptponbrs();
-            
-            foreach ($purchaseordernumbers as $ponbr) {
-                $this->add_receiptsforpo($ponbr);
-            }
+        protected function process_response() {
+            if ($this->response['error'] || $this->response['Status'] == 'FAILURE') {
+                $error = !empty($this->response['ErrorCode']) ? "ErrorCode: " . $this->response['ErrorCode'] . " -> " : '';
+                $error .= !empty($this->response['ErrorMessage']) ? $this->response['ErrorMessage'] : $this->response['Message'];
+                $error .= " -> ";
+                $error .= !empty($this->response['FieldCode']) ? "FieldCode: " . $this->response['FieldCode'] : '';
+                $this->log_error($error);
+            } 
         }
     }

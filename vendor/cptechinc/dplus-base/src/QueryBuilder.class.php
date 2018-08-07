@@ -31,7 +31,8 @@
             'inner',
             'outer',
             'right',
-            'like'
+            'like',
+            'not'
         );
         
         /**

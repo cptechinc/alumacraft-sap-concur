@@ -129,10 +129,28 @@
 			return $this->response;
 		}
 		
+		/**
+		 * Writes to Error Log
+		 * @param  string $error Error Message
+		 * @return void
+		 */
 		protected function log_error($error) {
 			$date = date("Y-m-d h:m:s");
 			$class = get_class();
 			$message = "[{$date}] [{$class}] $error";
 			DplusWire::wire('log')->save('sap-errors', $message);
+		}
+		
+		/**
+		 * Cleanses the value using str_replace
+		 * @param  string $value string
+		 * @return string        Sanitized String
+		 */
+		protected function clean_value($value) {
+			$replace = array(
+				"\r" => '',
+				"\n" => ''
+			);
+			return trim(str_replace(array_keys($replace), array_values($replace), $value));
 		}
 	}

@@ -12,5 +12,6 @@ return array(
     '7e615b33cf160d8e581392b7fe6dbb53' => $baseDir . '/src/Concur_Authentication.class.php',
     '6afa9f6a3634116681663f6bbdf1c4d6' => $baseDir . '/src/Concur_Vendor.class.php',
     'd2530fee1ad11fd818499d62422c3f49' => $baseDir . '/src/Concur_PurchaseOrder.class.php',
+    'ee7433e091775c538a8161bbec97f39d' => $baseDir . '/src/Concur_PurchaseOrderReceipts.class.php',
     '9eac9b0d31e58ebf7f457f5eec03cd5b' => $baseDir . '/src/ConcurFactory.class.php',
 );
