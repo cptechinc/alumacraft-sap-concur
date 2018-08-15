@@ -41,10 +41,12 @@
          */
         public function batch_addreceipts() {
             $purchaseordernumbers = get_dbdistinctreceiptponbrs();
+            $response = array();
             
             foreach ($purchaseordernumbers as $ponbr) {
-                $this->add_receiptsforpo($ponbr);
+                $response[$ponbr] = $this->add_receiptsforpo($ponbr);
             }
+            return $response;
         }
         
         /**
@@ -53,10 +55,12 @@
          */
         public function add_receiptsforpo($ponbr) {
             $receiptlines = get_dbreceiptslinenbrs($ponbr);
+            $response = array();
             
             foreach ($receiptlines as $linenumber) {
-                $this->add_receipt($ponbr, $linenumber);
+                $response[$linenumber] = $this->add_receipt($ponbr, $linenumber);
             }
+            return $response;
         }
         
         /**

@@ -52,7 +52,7 @@
                 'AccountCode'              => array('dbcolumn' => 'ExpenseType', 'required' => false),
                 'Description'              => array('dbcolumn' => '', 'required' => false),
                 'ExternalID'               => array('dbcolumn' => '', 'required' => false),
-                'IsReceiptRequired'        => array('dbcolumn' => '', 'required' => false),
+                'IsReceiptRequired'        => array('dbcolumn' => '', 'required' => false, 'default' => 'Y'),
                 'LineNumber'               => array('dbcolumn' => '', 'required' => false),
                 'PurchaseOrderReceiptType' => array('dbcolumn' => '', 'required' => false, 'default' => 'WQTY'),
                 'Quantity'                 => array('dbcolumn' => '', 'required' => false),
@@ -60,6 +60,9 @@
             )
         );
         
+        /* =============================================================
+            CONCUR INTERFACE FUNCTIONS
+        ============================================================ */
         /**
          * Sends GET Request to retreive Purchase Order
          * @param  string $ponbr Purchase Order Number
@@ -107,6 +110,28 @@
         }
         
         /**
+         * Processes Response and logs Errors if needed
+         * @return void
+         */
+        protected function process_response() {
+            $this->response['Status'] = isset($this->response['Status']) ? $this->response['Status'] : '';
+            
+            if (isset($this->response['error']) || $this->response['Status'] == 'FAILURE') {
+                $error = !empty($this->response['ErrorCode']) ? "ErrorCode: " . $this->response['ErrorCode'] . " -> " : '';
+                $error .= !empty($this->response['ErrorMessage']) ? $this->response['ErrorMessage'] : $this->response['Message'];
+                $error .= " -> ";
+                $error .= !empty($this->response['FieldCode']) ? "FieldCode: " . $this->response['FieldCode'] : '';
+                $this->log_error($error);
+            } elseif (strpos(strtolower($response['Message']), strtolower('Purchase Order Cannot be updated as it does not exist in system')) !== false) {
+                $error = $response['Message'];
+                $this->log_error($error);
+            }
+        }
+        
+        /* =============================================================
+            CLASS FUNCTIONS
+        ============================================================ */
+        /**
          * Verifies if Purchase Order exits at Concur 
          * If it exists then it updates the Purchase Order
          * IF not, it will create the Purchase Order
@@ -124,7 +149,7 @@
         /**
          * Process a batch of Purchase Orders and handle the update / create for each
          * @param  int    $limit Number of POs to do, If 0, Then There is no limit
-         * @return array        Response for each PO Number Keyed by Purchase Order Number
+         * @return array         Response for each PO Number Keyed by Purchase Order Number
          */
         public function batch_purchaseorders($limit = 0) {
             $purchaseorders = get_dbpurchaseordernbrs($limit);
@@ -137,7 +162,6 @@
             $this->response = $response;
             return $this->response;
         }
-        
         
         /**
          * Gets Purchase Order header from Database and apply it to the structure needed
@@ -165,24 +189,5 @@
                 $lines[] = $line;
             }
             return $lines;
-        }
-        
-        /**
-         * Processes Response and logs Errors if needed
-         * @return void
-         */
-        protected function process_response() {
-            $this->response['Status'] = isset($this->response['Status']) ? $this->response['Status'] : '';
-            
-            if (isset($this->response['error']) || $this->response['Status'] == 'FAILURE') {
-                $error = !empty($this->response['ErrorCode']) ? "ErrorCode: " . $this->response['ErrorCode'] . " -> " : '';
-                $error .= !empty($this->response['ErrorMessage']) ? $this->response['ErrorMessage'] : $this->response['Message'];
-                $error .= " -> ";
-                $error .= !empty($this->response['FieldCode']) ? "FieldCode: " . $this->response['FieldCode'] : '';
-                $this->log_error($error);
-            } elseif (strpos(strtolower($response['Message']), strtolower('Purchase Order Cannot be updated as it does not exist in system')) !== false) {
-                $error = $response['Message'];
-                $this->log_error($error);
-            }
         }
     }

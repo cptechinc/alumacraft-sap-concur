@@ -191,3 +191,149 @@
             return $sql->fetch(PDO::FETCH_ASSOC);
         }
     }
+    
+    /* =============================================================
+		INVOICE FUNCTIONS
+	============================================================ */
+    /**
+     * Returns if Invoice header exists in the database
+     * @param  string $invnbr Invoice Number
+     * @param  bool   $debug  Run in debug? If so, return SQL Query
+     * @return bool           Does Invoice exist in the header table
+     */
+    function does_dbinvoiceexist($invnbr, $debug = false) {
+        $q = (new QueryBuilder())->table('ap_invc_head');
+        $q->field($q->expr('IF(COUNT(*) > 0, 1, 0)'));
+        $q->where('InvoiceNumber', $invnbr);
+        $sql = DplusWire::wire('database')->prepare($q->render());
+        
+        if ($debug) {
+            return $q->generate_sqlquery();
+        } else {
+            $sql->execute($q->params);
+            return $sql->fetchColumn();
+        }
+    }
+    
+    /**
+     * Inserts an Invoice header in the database
+     * @param  array  $invoice Key-value with columns and their values to set
+     * @param  bool   $debug   Run in debug? If so, return SQL Query
+     * @return int             Insert ID
+     */
+    function insert_dbinvoice($invoice, $debug = false) {
+        $q = (new QueryBuilder())->table('ap_invc_head');
+        $q->mode('insert');
+        $columns = array_keys($invoice);
+        
+        foreach ($invoice as $column => $value) {
+            $q->set($column, $value);
+        }
+        
+        $sql = DplusWire::wire('database')->prepare($q->render());
+        if ($debug) {
+            return $q->generate_sqlquery();
+        } else {
+            $sql->execute($q->params);
+            return DplusWire::wire('database')->lastInsertId();
+        }
+    }
+    
+    /**
+     * Updates the Invoice Header in the database
+     * @param  array  $invoice Key-value with columns and their values to set
+     * @param  bool   $debug   Run in debug? If so, return SQL Query
+     * @return int             Row Count of updated rows (1 | 0)
+     */
+    function update_dbinvoice($invoice, $debug = false) {
+        $q = (new QueryBuilder())->table('ap_invc_head');
+        $q->mode('update');
+        $columns = array_keys($invoice);
+        
+        foreach ($invoice as $column => $value) {
+            $q->set($column, $value);
+        }
+        $q->where('InvoiceNumber', $invoice['InvoiceNumber']);
+        
+        $sql = DplusWire::wire('database')->prepare($q->render());
+        if ($debug) {
+            return $q->generate_sqlquery();
+        } else {
+            $sql->execute($q->params);
+            return $sql->rowCount();
+        }
+    }
+    
+    /**
+     * Returns if Invoice Detail Line exists
+     * @param  string $invnbr  Invoice Number
+     * @param  int    $linenbr Detail Line Number
+     * @param  bool   $debug   Run in debug? If so, return SQL Query
+     * @return bool            Does Detail Line eixst?
+     */
+    function does_dbinvoicelineexist($invnbr, $linenbr, $debug = false) {
+        $q = (new QueryBuilder())->table('ap_invc_detail');
+        $q->field($q->expr('IF(COUNT(*) > 0, 1, 0)'));
+        $q->where('InvoiceNumber', $invnbr);
+        $q->where('RequestLineNbr', $linenbr);
+        $sql = DplusWire::wire('database')->prepare($q->render());
+        
+        if ($debug) {
+            return $q->generate_sqlquery();
+        } else {
+            $sql->execute($q->params);
+            return $sql->fetchColumn();
+        }
+    }
+    
+    /**
+     * Inserts Invnoice Detail Line
+     * @param  string $invnbr      Invoice Number
+     * @param  array  $invoiceline Key-value with columns and their values to set
+     * @param  bool   $debug       Run in debug? If so, return SQL Query
+     * @return int                 Inserted Row ID
+     */
+    function insert_dbinvoiceline($invnbr, $invoiceline, $debug = false) {
+        $q = (new QueryBuilder())->table('ap_invc_detail');
+        $q->mode('insert');
+        $columns = array_keys($invoiceline);
+        $q->where('InvoiceNumber', $invnbr);
+        
+        foreach ($invoiceline as $column => $value) {
+            $q->set($column, $value);
+        }
+        
+        $sql = DplusWire::wire('database')->prepare($q->render());
+        if ($debug) {
+            return $q->generate_sqlquery();
+        } else {
+            $sql->execute($q->params);
+            return DplusWire::wire('database')->lastInsertId();
+        }
+    }
+    
+    /**
+     * Updates Invoice Line in the database
+     * @param  string $invnbr      Invoice Number
+     * @param  array  $invoiceline Key-value with columns and their values to set
+     * @param  bool   $debug       Run in debug? If so, return SQL Query
+     * @return int                 Updated rows count (1 | 0)
+     */
+    function update_dbinvoiceline($invnbr, $invoiceline, $debug = false) {
+        $q = (new QueryBuilder())->table('ap_invc_detail');
+        $q->mode('update');
+        $columns = array_keys($invoiceline);
+        
+        foreach ($invoiceline as $column => $value) {
+            $q->set($column, $value);
+        }
+        $q->where('InvoiceNumber', $invnbr);
+        
+        $sql = DplusWire::wire('database')->prepare($q->render());
+        if ($debug) {
+            return $q->generate_sqlquery();
+        } else {
+            $sql->execute($q->params);
+            return $sql->rowCount();
+        }
+    }

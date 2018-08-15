@@ -26,7 +26,8 @@
 			'authentication' => 'Concur_Authentication',
 			'vendor' => 'Concur_Vendor',
 			'purchase-order' => 'Concur_PurchaseOrder',
-			'purchase-order-receipts' => 'Concur_PurchaseOrderReceipts'
+			'purchase-order-receipts' => 'Concur_PurchaseOrderReceipts',
+			'invoice' => 'Concur_Invoice'
 		);
 		
 		/**

@@ -13,6 +13,7 @@
 			"src/Concur_Vendor.class.php",
 			"src/Concur_PurchaseOrder.class.php",
 			"src/Concur_PurchaseOrderReceipts.class.php",
+			"src/Concur_Invoice.class.php",
 			"src/ConcurFactory.class.php"
 		]
 	}

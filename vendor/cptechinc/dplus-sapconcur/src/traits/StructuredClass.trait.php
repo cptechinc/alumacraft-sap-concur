@@ -26,25 +26,67 @@
 		}
 		
 		/**
-		 * Determines the Value to get and format
+		 * Returns a one-dimensional array with fields for keys and values (mainly for database)
+		 * @param  array  $structure Defined structure to loop through keys
+		 * @param  array  $values    Array of Values
+		 * @return array             One-dimensional key-value array
+		 */
+		protected function create_dbarray($structure, $values) {
+			$structuredarray = array();
+			
+			foreach ($structure as $field => $properties) {
+				$column = !empty($properties['dbcolumn']) ? $properties['dbcolumn'] : $field;
+				
+				if (is_array($values[$field])) {
+					$structuredarray = array_merge($structuredarray, $this->create_dbarray($structure[$field], $values[$field]));
+				} else {
+					$structuredarray[$column] = $this->get_dbvalue($values, $field, $properties);
+				}
+				
+			}
+			return $structuredarray;
+		}
+		
+		/**
+		 * Determines the Value to get
 		 * @param  array  $values          Array of Values, Key value array
 		 * @param  string $field           Field to find value for
 		 * @param  array  $fieldproperties Array of Properties for that field
 		 * @return string                  Determined Value, formatted
 		 */
 		protected function get_value($values, $field, $fieldproperties) {
-			$value = '';
 			$field = !empty($fieldproperties['dbcolumn']) ? $fieldproperties['dbcolumn'] : $field;
-			
-            if (isset($fieldproperties['format'])) {
+			return $this->format_value($values[$field], $fieldproperties);
+        }
+		
+		/**
+		 * Returns the value from the values array, does not use the dbcolumn
+		 * @param  array  $values          Values
+		 * @param  string $field           Key
+		 * @param  array  $fieldproperties Format Properties for that field
+		 * @return mixed                   Formatted Value
+		 */
+		protected function get_dbvalue($values, $field, $fieldproperties) {
+			return $this->format_value($values[$field], $fieldproperties);
+        }
+		
+		/**
+		 * Formats the value of a field using the field properties array
+		 * @param  mixed $value            Value to format
+		 * @param  array $fieldproperties  Properties
+		 * @return mixed                   Formatted Value
+		 */
+		protected function format_value($value, $fieldproperties) {
+			if (isset($fieldproperties['format'])) {
                 switch ($fieldproperties['format']) {
                     case 'date':
-                        $value = date($fieldproperties['date-format'], strtotime($this->clean_value($values[$field])));
+                        $value = date($fieldproperties['date-format'], strtotime($this->clean_value($value)));
                         break;
                 }
             } else {
-                $value = $this->clean_value($values[$field]);
+                $value = $this->clean_value($value);
             }
+			
 			return (empty($value) && isset($fieldproperties['default'])) ? $fieldproperties['default'] : $value;
-        }
+		}
 	}
