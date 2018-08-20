@@ -47,6 +47,11 @@
 			}
 		}
 		
+		/**
+		 * Creates an instance of Endpoint and returns it
+		 * @param  string $endpoint Endpoint to use
+		 * @return mixed            Endpoint
+		 */
 		public function create_endpoint($endpoint) {
 			if (in_array($endpoint, array_keys($this->endpoints))) {
 				$class = $this->endpoints[$endpoint];
