@@ -152,12 +152,17 @@
 		 * @return array         Response for each PO Number Keyed by Purchase Order Number
 		 */
 		public function batch_purchaseorders($limit = 0) {
-			$purchaseorders = get_dbpurchaseordernbrs($limit);
-			$response = array();
+			$response = array('created' => array(), 'updated' => array());
+			$separatedponbrs = $this->separate_purchaseorders($purchaseorders);
 			
-			foreach ($purchaseorders as $ponbr) {
-				$this->send_purchaseorder($ponbr);
-				$response[$ponbr] = $this->response;
+			foreach ($separatedponbrs['new'] as $ponbr) {
+				$this->create_purchaseorder($ponbr);
+				$response['created'][$ponbr] = $this->response;
+			}
+			
+			foreach ($separatedponbrs['existing'] as $ponbr) {
+				$this->update_purchaseorder($ponbr);
+				$response['updated'][$ponbr] = $this->response;
 			}
 			$this->response = $response;
 			return $this->response;
@@ -169,7 +174,7 @@
 		 * @param array $purchaseorders Purchase Order Numbers
 		 */
 		public function add_specificpurchaseorders($purchaseorders) {
-			$response = array('created' => array(), 'updated' => array(),);
+			$response = array('created' => array(), 'updated' => array());
 			$separatedponbrs = $this->separate_purchaseorders($purchaseorders);
 			
 			foreach ($separatedponbrs['new'] as $ponbr) {

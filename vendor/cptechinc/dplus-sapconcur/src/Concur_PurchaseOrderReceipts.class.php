@@ -37,7 +37,8 @@
 		
 		/**
 		 * Gets all the PO Numbers
-		 * @return array Generated Response
+		 * @param  int    $limit Number of POs to do
+		 * @return array         Generated Response
 		 */
 		public function batch_addreceipts($limit = 0) {
 			$purchaseordernumbers = get_dbdistinctreceiptponbrs($limit);
@@ -49,10 +50,14 @@
 			return $response;
 		}
 		
+		/**
+		 * Adds receipts for specific Purchase Order Numbers
+		 * @param array $ponumbers Purchase Order Numbers
+		 */
 		public function add_receieptsforspecifiedpos($ponumbers) {
 			$response = array();
 			
-			foreach ($purchaseordernumbers as $ponbr) {
+			foreach ($ponumbers as $ponbr) {
 				$response[$ponbr] = $this->add_receiptsforpo($ponbr);
 			}
 			return $response;
