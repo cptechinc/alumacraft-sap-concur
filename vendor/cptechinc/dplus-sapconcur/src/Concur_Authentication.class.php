@@ -49,6 +49,7 @@
 			];
 			$this->post_curl($this->endpoints['authentication'], $body);
 			$this->accesstoken = $this->response['error'] ? false : $this->response['access_token'];
+			DplusWire::wire('session')->tokenexpires = strtotime('now') + 3600; // EXPIRES IN ONE HOUR
 			return $this->response;
 		}
 	}

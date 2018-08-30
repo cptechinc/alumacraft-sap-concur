@@ -37,24 +37,48 @@
 		
 		/**
 		 * Gets all the PO Numbers
-		 * @param  int    $limit Number of POs to do
+		 * @param int     $limit Number of POs to do
+		 * @param string  $ponbr Purchase Order Number to start after
 		 * @return array         Generated Response
 		 */
-		public function batch_addreceipts($limit = 0) {
-			$purchaseordernumbers = get_dbdistinctreceiptponbrs($limit);
-			$response = array();
+		public function batch_addreceipts($limit = 0, $ponbr = '') {
+			$purchaseordernumbers = get_dbdistinctreceiptponbrs($limit, $ponbr);
+			$response = $sortedresponse = array();
 			
 			foreach ($purchaseordernumbers as $ponbr) {
+				if (strtotime('now') > DplusWire::wire('session')->tokenexpires) {
+					$this->reauthenticate();
+				}
 				$response[$ponbr] = $this->add_receiptsforpo($ponbr);
 			}
-			return $response;
+			$sortedresponse = $this->sort_response($response);
+			return $sortedresponse;
+		}
+		
+		public function sort_response($response) {
+			$sortedresponse = array('failed' => array(), 'ok' => array());
+			
+			foreach ($response as $ponbr => $purchaselines) {
+				foreach ($purchaselines as $linenbr => $line) {
+					if ($this->did_detailfail($line)) {
+						$sortedresponse['failed'][$ponbr][$linenbr] = $line;
+					} else {
+						$sortedresponse['ok'][$ponbr][$linenbr] = $line;
+					}
+				}
+			}
+			return $sortedresponse;
+		}
+		
+		public function did_detailfail($detail) {
+			return ($detail['Status'] == 'FAILURE') ? true : false;
 		}
 		
 		/**
 		 * Adds receipts for specific Purchase Order Numbers
 		 * @param array $ponumbers Purchase Order Numbers
 		 */
-		public function add_receieptsforspecifiedpos($ponumbers) {
+		public function add_receiptsforspecifiedpos($ponumbers) {
 			$response = array();
 			
 			foreach ($ponumbers as $ponbr) {
@@ -76,6 +100,8 @@
 			}
 			return $response;
 		}
+		
+		
 		
 		/**
 		 * Processes Response and logs Errors if needed

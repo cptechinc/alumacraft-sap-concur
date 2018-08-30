@@ -64,23 +64,27 @@
 			return $sql->fetchAll(PDO::FETCH_COLUMN);
 		}
 	}
+	
 	/* =============================================================
 		PURCHASE ORDER FUNCTIONS
 	============================================================ */
 	/**
-	 * Returns the record for Purchase Order header
+	 * Returns X number of Purchase Order headers
 	 * @param  int    $limit How Many Purchase Order Numbers to Return
+	 * @param  string $ponbr PO Nbr to start
 	 * @param  bool   $debug Run in debug? If so, return SQL Query
 	 * @return array         Purchase Order Numbers in one-dimensional arrays
 	 */
-	function get_dbpurchaseordernbrs($limit = 0, $debug = false) {
+	function get_dbpurchaseordernbrs($limit = 0, $ponbr = '', $debug = false) {
 		$q = (new QueryBuilder())->table('po_head');
 		$q->field($q->expr('DISTINCT(PurchaseOrderNumber)'));
 		
-		if ($limit) {
+		if (!empty($ponbr)) {
+			$q->where('PurchaseOrderNumber', '>', $ponbr);
+		} 
+		if (!empty($limit)) {
 			$q->limit($limit);
 		}
-		
 		$sql = DplusWire::wire('database')->prepare($q->render());
 		
 		if ($debug) {
@@ -134,12 +138,16 @@
 	============================================================ */
 	/**
 	 * Returns all the Purchase Order Numbers available to send receipts for 
+	 * @param  string $ponbr  Purchase Order Number to start after
 	 * @param  bool   $debug  Run in debug? If so, return SQL Query
 	 * @return array          One Dimenisonal array e.g. ('1004', '1005')
 	 */
-	function get_dbdistinctreceiptponbrs($limit = 0, $debug = false) {
+	function get_dbdistinctreceiptponbrs($limit = 0, $ponbr = '', $debug = false) {
 		$q = (new QueryBuilder())->table('po_receipts');
 		$q->field($q->expr("DISTINCT(PurchaseOrderNumber)"));
+		if (!empty($ponbr)) {
+			$q->where('PurchaseOrderNumber', '>', $ponbr);
+		} 
 		if (!empty($limit)) {
 			$q->limit($limit);
 		}

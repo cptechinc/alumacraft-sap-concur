@@ -136,7 +136,7 @@
 		 */
 		protected function log_error($error) {
 			$date = date("Y-m-d h:m:s");
-			$class = get_class();
+			$class = get_class($this);
 			$message = "[{$date}] [{$class}] $error";
 			DplusWire::wire('log')->save('sap-errors', $message);
 		}
@@ -152,5 +152,11 @@
 				"\n" => ''
 			);
 			return trim(str_replace(array_keys($replace), array_values($replace), $value));
+		}
+		
+		protected function reauthenticate() {
+			$api = new Concur_Authentication();
+			$api->create_authenticationtoken();
+			$this->accesstoken = $api->response['access_token'];
 		}
 	}

@@ -115,6 +115,7 @@
 		 */
 		protected function process_response() {
 			$this->response['Status'] = isset($this->response['Status']) ? $this->response['Status'] : '';
+			$this->response['Message'] = isset($this->response['Message']) ? $this->response['Message'] : '';
 			
 			if (isset($this->response['error']) || $this->response['Status'] == 'FAILURE') {
 				$error = !empty($this->response['ErrorCode']) ? "ErrorCode: " . $this->response['ErrorCode'] . " -> " : '';
@@ -149,10 +150,12 @@
 		/**
 		 * Process a batch of Purchase Orders and handle the update / create for each
 		 * @param  int    $limit Number of POs to do, If 0, Then There is no limit
+		 * @param  string $ponbr Purchase Order Number to start after
 		 * @return array         Response for each PO Number Keyed by Purchase Order Number
 		 */
-		public function batch_purchaseorders($limit = 0) {
+		public function batch_purchaseorders($limit = 0, $ponbr = '') {
 			$response = array('created' => array(), 'updated' => array());
+			$purchaseorders = get_dbpurchaseordernbrs($limit, $ponbr);
 			$separatedponbrs = $this->separate_purchaseorders($purchaseorders);
 			
 			foreach ($separatedponbrs['new'] as $ponbr) {
@@ -200,7 +203,7 @@
 			
 			foreach ($purchaseorders as $ponbr) {
 				$category = $this->does_poexist($ponbr) ? 'existing' : 'new';
-				$response[$category] = $ponbr;
+				$response[$category][] = $ponbr;
 			}
 			$this->response = $response;
 			return $this->response;

@@ -28,7 +28,7 @@
 				'TotalApprovedAmount'  => array('dbcolumn' => '', 'required' => false),
 				'ShippingAmount'       => array('dbcolumn' => '', 'required' => false),
 				'TaxAmount'            => array('dbcolumn' => '', 'required' => false),
-				'LineItemTotalAmount'      => array('dbcolumn' => '', 'required' => false),
+				'LineItemTotalAmount'  => array('dbcolumn' => '', 'required' => false),
 				'PurchaseOrderNumber'  => array('dbcolumn' => '', 'required' => false),
 				'Custom9'              => array('dbcolumn' => 'Location', 'required' => false),
 				'AmountWithoutVat'     => array('dbcolumn' => '', 'required' => false),
