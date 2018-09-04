@@ -128,6 +128,16 @@
 				$this->log_error($error);
 			}
 		}
+		/* =============================================================
+			ERROR CODES AND POSSIBLE SOLUTIONS
+		============================================================ */
+		/**
+		 * 3000  The Currency Code is missing or invalid
+		 * 2000  There was no vendor found for the supplied Vendor Code and Vendor Address Code, try sending that vendor then, resend PO
+		 * 5007  The Line item total amount cannot be zero, Find Line Item, verify and Ask for cobol changes
+		 * 5501  The line item distributions exceed the line item amount, Line Total is not what was expected for quantity and price, verify then ask for cobol changes
+		 * 8000  The required field is missing, verify that the field code is indeed missing Inform customer
+		 */
 		
 		/* =============================================================
 			CLASS FUNCTIONS
