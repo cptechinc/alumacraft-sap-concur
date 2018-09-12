@@ -46,7 +46,10 @@
 					'StateProvince' => array('dbcolumn' => 'shiptoState', 'required' => false)
 				),
 				'VendorCode'        => array('dbcolumn' => 'vendorID', 'required' => false),
-				'VendorAddressCode' => array('dbcolumn' => 'vendorID', 'required' => false)
+				'VendorAddressCode' => array('dbcolumn' => 'vendorID', 'required' => false),
+				'DiscountTerms'     => array('dbcolumn' => '', 'required' => false),
+				'DiscountPercent'   => array('dbcolumn' => '', 'required' => false),
+				'PaymentTerms'      => array('dbcolumn' => '', 'required' => false)
 			),
 			'detail' => array(
 				'AccountCode'              => array('dbcolumn' => 'ExpenseType', 'required' => false),
@@ -56,7 +59,8 @@
 				'LineNumber'               => array('dbcolumn' => '', 'required' => false),
 				'PurchaseOrderReceiptType' => array('dbcolumn' => '', 'required' => false, 'default' => 'WQTY'),
 				'Quantity'                 => array('dbcolumn' => '', 'required' => false),
-				'UnitPrice'                => array('dbcolumn' => '', 'required' => false)
+				'UnitPrice'                => array('dbcolumn' => '', 'required' => false),
+				'SupplierPartID'           => array('dbcolumn' => '', 'required' => false),
 			)
 		);
 		
