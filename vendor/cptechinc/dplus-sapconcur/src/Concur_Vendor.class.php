@@ -3,7 +3,6 @@
 	 * Class to handle dealing with Vendors 
 	 */
 	class Concur_Vendor extends Concur_Endpoint {
-		use ConstructAccessToken;
 		use StructuredClassTraits;
 		
 		protected $endpoints = array(

@@ -13,12 +13,6 @@
 		protected $error = false;
 		
 		/**
-		 * Use to provide access to Servers
-		 * @var string
-		 */
-		protected $accesstoken;
-		
-		/**
 		 * Endpoints by their type => Class Name
 		 * @var array
 		 */
@@ -39,9 +33,6 @@
 			$api = new Concur_Authentication();
 			$api->create_authenticationtoken();
 			
-			if (!$api->response['error']) {
-				$this->accesstoken = $api->response['access_token'];
-			} else {
 				echo json_encode($api->response);
 				exit;
 			}
@@ -55,7 +46,7 @@
 		public function create_endpoint($endpoint) {
 			if (in_array($endpoint, array_keys($this->endpoints))) {
 				$class = $this->endpoints[$endpoint];
-				return new $class($this->accesstoken);
+				return new $class();
 			} else {
 				$this->error("Endpoint $endpoint does not exist");
 			}

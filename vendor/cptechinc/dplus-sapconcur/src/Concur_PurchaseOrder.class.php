@@ -3,7 +3,6 @@
 	 * Class to handle dealing with Purchase Orders
 	 */
 	class Concur_PurchaseOrder extends Concur_Endpoint {
-		use ConstructAccessToken;
 		use StructuredClassTraits;
 		
 		protected $endpoints = array(
@@ -61,6 +60,7 @@
 				'Quantity'                 => array('dbcolumn' => '', 'required' => false),
 				'UnitPrice'                => array('dbcolumn' => '', 'required' => false),
 				'SupplierPartID'           => array('dbcolumn' => '', 'required' => false),
+				'Custom7'                   => array('dbcolumn' => 'ItemID', 'required' => false),
 			)
 		);
 		
@@ -155,9 +155,9 @@
 		 */
 		public function send_purchaseorder($ponbr) {
 			if ($this->does_poexist($ponbr)) {
-				$this->update_purchaseorder($ponbr);
+				return $this->update_purchaseorder($ponbr);
 			} else {
-				$this->create_purchaseorder($ponbr);
+				return $this->create_purchaseorder($ponbr);
 			}
 		}
 		

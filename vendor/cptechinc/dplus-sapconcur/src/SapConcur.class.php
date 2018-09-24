@@ -13,12 +13,6 @@
 		protected $endpoints;
 		
 		/**
-		 * Use to provide access to Servers
-		 * @var string
-		 */
-		protected $accesstoken;
-		
-		/**
 		 * Response from cURL or Endpoint
 		 * @var array
 		 */
@@ -80,13 +74,18 @@
 		
 		/**
 		 * Creates the default HTTP HEADERS Array used for cURL
+		 * // NOTE IT REAUTHENTICATES IF TOKEN HAS EXPIRED
 		 * @return array default HTTP HEADER
 		 */
 		protected function generate_defaultcurlheader() {
+			if (strtotime('now') > Concur_Authentication::$tokenexpires) {
+				Concur_Authentication::re_authenticate();
+			}
+			$accesstoken = Concur_Authentication::$authtoken;
 			return $headers = [
 				'Connection: close',
 				'Accept: application/json',
-				"Authorization: Bearer $this->accesstoken"
+				"Authorization: Bearer $accesstoken"
 			];
 		}
 		
@@ -152,11 +151,5 @@
 				"\n" => ''
 			);
 			return trim(str_replace(array_keys($replace), array_values($replace), $value));
-		}
-		
-		protected function reauthenticate() {
-			$api = new Concur_Authentication();
-			$api->create_authenticationtoken();
-			$this->accesstoken = $api->response['access_token'];
 		}
 	}

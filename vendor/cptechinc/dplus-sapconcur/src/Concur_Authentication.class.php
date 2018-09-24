@@ -3,10 +3,21 @@
 	 * Class for getting Authentication through Concur's API
 	 */
 	class Concur_Authentication extends Concur_Endpoint {
-		
 		protected $endpoints = array(
 			'authentication' => 'https://us.api.concursolutions.com/oauth2/v0/token'
 		);
+		
+		/**
+		 * Concur Access Token
+		 * @var string
+		 */
+		static $authtoken;
+		
+		/**
+		 * Time Stamp of when access token Expires
+		 * @var int
+		 */
+		static $tokenexpires;
 		
 		/**
 		 * Sends POST cURL request
@@ -38,18 +49,19 @@
 		 * @return array JSON Response
 		 */
 		public function create_authenticationtoken() {
-			$response_array = array();
+			$appconfig = DplusWire::wire('pages')->get('/config/');
 			$body = [
-				'client_id' => 'd4b944a4-54d5-4db4-918a-5fc3f762d190',
-				'client_secret' => '924f16ab-5621-4339-9760-bbc595aec155',
+				'client_id' => $appconfig->client_id,
+				'client_secret' => $appconfig->client_secret,
 				'grant_type' => 'password',
-				'username' => 'WebAdmin@alumacraft.com',
-				'password' => 'Welcome@18',
+				'username' => $appconfig->concur_username,
+				'password' => $appconfig->concur_password,
 				'credtype '=>'password',
 			];
 			$this->post_curl($this->endpoints['authentication'], $body);
 			$this->accesstoken = $this->response['error'] ? false : $this->response['access_token'];
-			DplusWire::wire('session')->tokenexpires = strtotime('now') + 3600; // EXPIRES IN ONE HOUR
+			self::$authtoken = $this->response['error'] ? false : $this->response['access_token'];
+			self::$tokenexpires = $this->response['error'] ? false : strtotime('now') + 3600;
 			return $this->response;
 		}
 	}

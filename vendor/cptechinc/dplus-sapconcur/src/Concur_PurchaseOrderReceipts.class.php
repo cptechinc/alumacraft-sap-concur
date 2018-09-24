@@ -1,6 +1,5 @@
 <?php 
 	class Concur_PurchaseOrderReceipts extends Concur_Endpoint {
-		use ConstructAccessToken;
 		use StructuredClassTraits;
 		
 		protected $endpoints = array(
@@ -46,9 +45,6 @@
 			$response = $sortedresponse = array();
 			
 			foreach ($purchaseordernumbers as $ponbr) {
-				if (strtotime('now') > DplusWire::wire('session')->tokenexpires) {
-					$this->reauthenticate();
-				}
 				$response[$ponbr] = $this->add_receiptsforpo($ponbr);
 			}
 			$sortedresponse = $this->sort_response($response);
