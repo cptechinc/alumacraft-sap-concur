@@ -51,6 +51,11 @@
 			return $sortedresponse;
 		}
 		
+		/**
+		 * Sorts reponses into two categories in array ok | failed
+		 * @param  array $response  Receipts send Response
+		 * @return array            array('failed' => $failed, 'ok' => $successful)
+		 */
 		public function sort_response($response) {
 			$sortedresponse = array('failed' => array(), 'ok' => array());
 			
@@ -66,6 +71,11 @@
 			return $sortedresponse;
 		}
 		
+		/**
+		 * Returns if the Detail Response returned failture
+		 * @param  array $detail  Receipt Response
+		 * @return bool           Did Receipt send fail?
+		 */
 		public function did_detailfail($detail) {
 			return ($detail['Status'] == 'FAILURE') ? true : false;
 		}

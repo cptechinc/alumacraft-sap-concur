@@ -21,11 +21,13 @@
 			'vendor' => 'Concur_Vendor',
 			'purchase-order' => 'Concur_PurchaseOrder',
 			'purchase-order-receipts' => 'Concur_PurchaseOrderReceipts',
-			'invoice' => 'Concur_Invoice'
+			'invoice' => 'Concur_Invoice',
+			'list-item' => 'Concur_ListItem',
+			'list-item-inventory' => 'Concur_ListItemInventory'
 		);
 		
 		/**
-		 * Creates factory then, we create an instance
+		 * Creates factory, then we create an instance
 		 * of the Authentication class which we use to retrieve
 		 * an access token we can save to this class and supply it to the endpoint classes
 		 */
@@ -33,6 +35,7 @@
 			$api = new Concur_Authentication();
 			$api->create_authenticationtoken();
 			
+			if ($api->response['error']) {
 				echo json_encode($api->response);
 				exit;
 			}
