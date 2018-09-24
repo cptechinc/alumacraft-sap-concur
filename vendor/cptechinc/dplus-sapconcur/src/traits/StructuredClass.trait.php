@@ -83,7 +83,9 @@
                         $value = date($fieldproperties['date-format'], strtotime($this->clean_value($value)));
                         break;
                 }
-            } else {
+            } elseif (isset($fieldproperties['strlen'])) {
+				$value = substr($this->clean_value($value), 0, $fieldproperties['strlen']);
+			} else {
                 $value = $this->clean_value($value);
             }
 			

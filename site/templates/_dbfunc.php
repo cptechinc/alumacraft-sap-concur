@@ -27,11 +27,11 @@
 	 * @param  bool   $debug    Run in debug? If so, return SQL Query
 	 * @return array            key-value array for a vendor record
 	 */
-	function get_dbvendors($exclude = false, $debug = false) {
+	function get_dbvendoridsexclude($exclude = false, $debug = false) {
 		$q = (new QueryBuilder())->table('vendors');
 		
 		if (!empty($exclude)) {
-			$q->where('VendorCode', 'not in', $exclude);
+			$q->where($q->expr('TRIM(VendorCode)'), 'not in', $exclude);
 		}
 		$sql = DplusWire::wire('database')->prepare($q->render());
 		
@@ -61,7 +61,7 @@
 			return $q->generate_sqlquery();
 		} else {
 			$sql->execute($q->params);
-			return $sql->fetchAll(PDO::FETCH_COLUMN);
+			return $sql->fetchAll(PDO::FETCH_ASSOC);
 		}
 	}
 	

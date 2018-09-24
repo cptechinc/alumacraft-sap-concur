@@ -24,7 +24,7 @@
 				'City' 								=> array('dbcolumn' => '', 'required' => false),
 				'State' 							=> array('dbcolumn' => '', 'required' => false),
 				'PostalCode' 						=> array('dbcolumn' => '', 'required' => false),
-				'CountryCode' 						=> array('dbcolumn' => '', 'required' => false),
+				'CountryCode' 						=> array('dbcolumn' => '', 'required' => false, 'strlen' => 2),
 				'Country' 							=> array('dbcolumn' => 'CountryCode', 'required' => false),
 				'Approved' 							=> array('dbcolumn' => '', 'required' => false),
 				'PaymentTerms' 						=> array('dbcolumn' => '', 'required' => false),
@@ -32,7 +32,7 @@
 				'TaxID' 							=> array('dbcolumn' => '', 'required' => false),
 				'ProvincialTaxID' 					=> array('dbcolumn' => '', 'required' => false),
 				'TaxType' 							=> array('dbcolumn' => '', 'required' => false),
-				'CurrencyCode' 						=> array('dbcolumn' => '', 'required' => false),
+				'CurrencyCode' 						=> array('dbcolumn' => '', 'required' => false, 'default' => 'USD'),
 				'ShippingMethod' 					=> array('dbcolumn' => '', 'required' => false),
 				'ShippingTerms' 					=> array('dbcolumn' => '', 'required' => false),
 				'DiscountTermsDays' 				=> array('dbcolumn' => '', 'required' => false),
@@ -122,17 +122,18 @@
 		 * @return array            Response
 		 */
 		public function create_vendors($vendors) {
-			$body = $this->get_vendorsendschema();
 			$vendorIDs = get_dbvendorsinclude($vendors);
+			$response = array();
 			
 			foreach ($vendorIDs as $dbvendor) {
+				$body = $this->get_vendorsendschema();
 				$vendor = $this->create_sectionarray($this->structure['header'], $dbvendor);
 				$body['Items'][] = $vendor;
 				$body['Vendor'][] = $vendor;
+				$body['TotalCount'] = 1;
+				$response[] = $this->post_curl($this->endpoints['vendor'], $body, $json = true);
 			}
-			$body['TotalCount'] = sizeof($vendors);
-			return $body;
-			return $this->post_curl($this->endpoints['vendor'], $body, $json = true);
+			return $response;
 		}
 		
 		/**
@@ -156,17 +157,18 @@
 		 * @return array            Response
 		 */
 		public function update_vendors(array $vendors) {
-			$body = $this->get_vendorsendschema();
 			$vendorIDs = get_dbvendorsinclude($vendors);
+			$response = array();
 			
 			foreach ($vendorIDs as $dbvendor) {
+				$body = $this->get_vendorsendschema();
 				$vendor = $this->create_sectionarray($this->structure['header'], $dbvendor);
 				$body['Items'][] = $vendor;
-				$body['TotalCount'] = sizeof($vendors);
 				$body['Vendor'][] = $vendor;
+				$body['TotalCount'] = 1;
+				$response[] = $this->put_curl($this->endpoints['vendor'], $body, $json = true);
 			}
-			return $body;
-			return $this->put_curl($this->endpoints['vendor'], $body, $json = true);
+			return $response;
 		}
 		
 		/**
@@ -184,12 +186,17 @@
 			}
 		}
 		
+		/**
+		 * Batch Send Vendors to Update / Create
+		 * @return array response arrays from both the Created and Updated
+		 */
 		public function batch_vendors() {
 			$existingvendors = $this->get_existingvendors();
-			$newvendors = get_dbvendors($existingvendors);
-			$response = array();
-			$response['updated'] = $this->update_vendors($existingvendors);
-			$response['created'] = $this->create_vendors($newvendors);
+			$newvendors = get_dbvendoridsexclude($existingvendors);
+			$response = array(
+				'updated' => $this->update_vendors($existingvendors),
+				'created' => $this->create_vendors($newvendors)
+			);
 			$this->response = $response;
 			return $this->response;
 		}

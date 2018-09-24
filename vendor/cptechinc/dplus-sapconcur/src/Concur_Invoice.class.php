@@ -1,6 +1,5 @@
 <?php
 	class Concur_Invoice extends Concur_Endpoint {
-		use ConstructAccessToken;
 		use StructuredClassTraits;
 		
 		protected $endpoints = array(
@@ -143,7 +142,7 @@
 		/**
 		 * Writes the Invoice and its Detail Lines
 		 * @param  string $invoiceID SAP Invoice ID
-		 * @return [type]            [description]
+		 * @return void
 		 */
 		public function write_invoice($invoiceID) {
 			$invoice = $this->get_invoice($invoiceID);
