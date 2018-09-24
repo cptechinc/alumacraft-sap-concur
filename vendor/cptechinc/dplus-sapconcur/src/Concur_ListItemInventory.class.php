@@ -18,7 +18,7 @@
                 'ID'         => array('dbcolumn' => 'concurID', 'required' => false),
                 'Level1Code' => array('dbcolumn' => 'itemID', 'required' => false),
                 'listID'     => array('dbcolumn' => 'listID', 'required' => false),
-                'Name'       => array('dbcolumn' => 'itemDescription', 'required' => false),
+                'Name'       => array('dbcolumn' => 'ItemDescription', 'required' => false),
             )
 		);
 		
@@ -93,5 +93,7 @@
 		/* =============================================================
 			CLASS FUNCTIONS
 		============================================================ */
-		
+		protected function process_response() {
+			
+		}
 	}

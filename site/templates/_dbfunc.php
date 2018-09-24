@@ -347,3 +347,92 @@
 			return $sql->rowCount();
 		}
 	}
+	
+	/* =============================================================
+		ITEM MASTER FUNCTIONS
+	==============================================================*/
+	/**
+	 * Returns if there's a sendlog_item_list record for X item
+	 * @param  string $itemID Item ID to check for
+	 * @param  bool   $debug  Run in debug? If so, return SQL Query
+	 * @return bool           Does Item have a send log record?
+	 */
+	function does_itemhavesendlog($itemID, $debug = false) {
+		$q = (new QueryBuilder())->table('sendlog_item_list');
+		$q->field($q->expr('IF(COUNT(*) > 0, 1, 0)'));
+		$q->where('ItemID', $itemID);
+		$sql = DplusWire::wire('database')->prepare($q->render());
+		
+		if ($debug) {
+			return $q->generate_sqlquery();
+		} else {
+			$sql->execute($q->params);
+			return $sql->fetchColumn();
+		}
+	}
+	
+	/**
+	 * Updates the sendlog_item_list table when an item has been sent to concur to be updated
+	 * @param  string $itemID Item ID
+	 * @param  string $date   MySQL datetime MM-DD-YYYY HH:MM:SS
+	 * @param  bool   $debug  Run in debug? If so, return SQL Query
+	 * @return string         Updated rows count (1 | 0)
+	 */
+	function update_itemsendlog($itemID, $date, $debug = false) {
+		$q = (new QueryBuilder())->table('sendlog_item_list');
+		$q->mode('update');
+		$q->set('updated', $date);
+		$q->where('ItemID', $itemID);
+		if ($debug) {
+			return $q->generate_sqlquery();
+		} else {
+			$sql->execute($q->params);
+			return $sql->rowCount();
+		}
+	}
+	
+	/**
+	 * Inserts a record for the sendlog_item_list table when the item has been sent to Concur
+	 * @param  string $itemID Item ID
+	 * @param  string $date   MySQL datetime MM-DD-YYYY HH:MM:SS
+	 * @param  bool   $debug  Run in debug? If so, return SQL Query
+	 * @return string         Last Insert ID
+	 */
+	function insert_itemsendlog($itemID, $date, $debug = false) {
+		$q = (new QueryBuilder())->table('sendlog_item_list');
+		$q->mode('insert');
+		$q->set('ItemID', $itemID);
+		$q->set('updated', $date);
+		
+		if ($debug) {
+			return $q->generate_sqlquery();
+		} else {
+			$sql->execute($q->params);
+			return DplusWire::wire('database')->lastInsertId();
+		}
+	}
+	
+	/**
+	 * Returns Item List
+	 * @param  int    $limit How Many Items to return
+	 * @param  string $start Start after X
+	 * @return array         Item List
+	 */
+	function get_itemlist($limit = 0, $start = '') {
+		$q = (new QueryBuilder())->table('item_list');
+		
+		if (!empty($start)) {
+			$q->where('ItemID', '>', $start);
+		}
+		
+		if ($limit) {
+			$q->limit($limit);
+		}
+		
+		if ($debug) {
+			return $q->generate_sqlquery();
+		} else {
+			$sql->execute($q->params);
+			return $sql->rowCount();
+		}
+	}
