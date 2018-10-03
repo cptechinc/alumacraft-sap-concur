@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "28e249f1b84a0746d13a0451336f0b9f",
+    "content-hash": "649f8540a3e8174d1d83450324692055",
     "packages": [
         {
             "name": "atk4/core",
@@ -109,6 +109,44 @@
             "time": "2017-03-08T09:52:14+00:00"
         },
         {
+            "name": "cptechinc/dplus-base",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cptechinc/dplus-base.git",
+                "reference": "e33415eec46c034f481e373ae9c8a6947c1d31df"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cptechinc/dplus-base/zipball/e33415eec46c034f481e373ae9c8a6947c1d31df",
+                "reference": "e33415eec46c034f481e373ae9c8a6947c1d31df",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/traits/CreateFromObjectArray.trait.php",
+                    "src/traits/CreateClassArray.trait.php",
+                    "src/traits/AttributeParser.trait.php",
+                    "src/traits/ThrowError.trait.php",
+                    "src/traits/MagicMethods.trait.php",
+                    "src/traits/Filterable.trait.php",
+                    "src/DplusDateTime.class.php",
+                    "src/Stringer.class.php",
+                    "src/QueryBuilder.class.php",
+                    "src/Curl.class.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "description": "Base Classes and Attributes",
+            "homepage": "https://github.com/cptechinc/dplus-base",
+            "keywords": [
+                "dplus-attributes",
+                "dplus-base"
+            ],
+            "time": "2018-10-03T20:54:57+00:00"
+        },
+        {
             "name": "jeremykendall/php-domain-parser",
             "version": "1.3.1",
             "source": {
@@ -199,7 +237,8 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "jwage/purl": 20
+        "jwage/purl": 20,
+        "cptechinc/dplus-base": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

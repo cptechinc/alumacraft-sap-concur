@@ -15,6 +15,10 @@ class ComposerStaticInit7314f3e3bbf4b468cf3e29ab477e27c7
         'd2530fee1ad11fd818499d62422c3f49' => __DIR__ . '/../..' . '/src/Concur_PurchaseOrder.class.php',
         'ee7433e091775c538a8161bbec97f39d' => __DIR__ . '/../..' . '/src/Concur_PurchaseOrderReceipts.class.php',
         'ee86fe96f570575229ed829986315a1f' => __DIR__ . '/../..' . '/src/Concur_Invoice.class.php',
+        '7a1ea243d42482188f5de3f31405b315' => __DIR__ . '/../..' . '/src/Concur_ListItem.class.php',
+        'b0f26f7d2bc58842bc1c5492702b7701' => __DIR__ . '/../..' . '/src/Concur_ListItemInventory.class.php',
+        '8ae7384734e9ca4df2607c09212aee89' => __DIR__ . '/../..' . '/src/Concur_Extract.class.php',
+        '84381b73dc823d5832a8ca4bd6180296' => __DIR__ . '/../..' . '/src/Concur_ExtractPurchaseOrder.class.php',
         '9eac9b0d31e58ebf7f457f5eec03cd5b' => __DIR__ . '/../..' . '/src/ConcurFactory.class.php',
     );
 

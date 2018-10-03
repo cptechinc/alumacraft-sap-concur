@@ -66,7 +66,7 @@
 		 * @return string           html string with the $needle highlighted or returns just the string
 		 */
 		public function highlight($haystack, $needle) {
-			$bootstrap = new Contento();
+			$bootstrap = new HTMLWriter();
 			if ($this->does_matchphone($haystack)) {
 				$needle = $this->does_matchphone($needle);
 			}

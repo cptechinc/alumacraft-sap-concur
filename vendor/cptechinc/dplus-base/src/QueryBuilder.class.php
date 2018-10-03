@@ -31,8 +31,8 @@
             'inner',
             'outer',
             'right',
-            'like',
-            'not'
+            'like', 
+            'on'
         );
         
         /**
@@ -52,7 +52,13 @@
             }
             return $sqlformat;
         }
-
+        
+        /**
+         * Takes the filters array and adds where statements for each filter based on its type
+         * @param  array $filters      Filters Keyed by filter
+         * @param  array $filtertypes  Properties for each filter
+         * @return void
+         */
         public function generate_filters($filters, $filtertypes) {
             foreach ($filters as $filter => $filtervalue) {
                 switch ($filtertypes[$filter]['querytype']) {
@@ -140,6 +146,27 @@
                 return '';
             }
         }
+        
+        /**
+         * Parses the Paramterized query provided by $this->render()
+         * Returns it in a Easy to read format with SQL keywords in CAPS and spaces after commas
+         * @return string SQL Query
+         */
+        public function generate_sqlquery() {
+            $sql = $this->getDebugQuery();
+            $sql = str_replace(',', ', ', $sql);
+            $sql = str_replace('!=', ' != ', $sql);
+            $sql = str_replace('`=``', '` = `', $sql);
+            
+            foreach ($this->params as $param => $value) {
+                $sql = str_replace($param, "'".$value."'", $sql);
+            }
+
+            foreach ($this->sqlkeywords as $keyword) {
+                $sql = preg_replace('/\b'.$keyword.'\b/', strtoupper($keyword), $sql);
+            }
+            return $sql;
+        }
 
         /**
          * Returns filter description for the filter
@@ -174,25 +201,5 @@
             $replace = array(' ', '-');
             $replacewith = array('%', '');
             return '%'.str_replace($replace, $replacewith, $keyword).'%';;
-        }
-        
-        /**
-         * Parses the Paramterized query provided by $this->render()
-         * Returns it in a Easy to read format with SQL keywords in CAPS and spaces after commas
-         * @return string SQL Query
-         */
-        public function generate_sqlquery() {
-            $sql = $this->render();
-            $sql = str_replace(',', ', ', $sql);
-            $sql = str_replace('!=', ' != ', $sql);
-            $sql = str_replace('`=``', '` = `', $sql);
-            foreach ($this->params as $param => $value) {
-                $sql = str_replace($param, "'".$value."'", $sql);
-            }
-
-            foreach ($this->sqlkeywords as $keyword) {
-                $sql = preg_replace('/\b'.$keyword.'\b/', strtoupper($keyword), $sql);
-            }
-            return $sql;
         }
     }

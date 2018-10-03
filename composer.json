@@ -1,34 +1,35 @@
 {
-    "name": "processwire/processwire",
+    "name": "cptechinc/sap-concur",
     "type": "library",
-    "description": "ProcessWire CMS/CMF",
-    "keywords": [ "processwire", "cms","cmf", "content management system" ],
+    "description": "Dplus SAP Concur Integration",
+    "keywords": ["dplus-concur", "dplus-sap-concur"],
     "license": "MPL-2.0",
-    "homepage": "https://processwire.com",
+    "homepage": "https://github.com/cptechinc/alumacraft-sap-concur",
     "minimum-stability": "dev",
     "repositories": [{
         "type": "git",
         "url": "https://github.com/cptechinc/purl.git"
     }],
     "authors": [
-    {
-        "name": "Paul Gomez",
-        "email": "paul@cptechinc.com",
-        "homepage": "https://www.cptechinc.com",
-        "role": "Developer"
-    },
-    {
-        "name": "Barbara Bullemer",
-        "email": "barbara@cptechinc.com",
-        "homepage": "https://www.cptechinc.com",
-        "role": "Developer"
-    }
+        {
+            "name": "Paul Gomez",
+            "email": "paul@cptechinc.com",
+            "homepage": "https://www.cptechinc.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Barbara Bullemer",
+            "email": "barbara@cptechinc.com",
+            "homepage": "https://www.cptechinc.com",
+            "role": "Developer"
+        }
     ],
     "require": {
         "php": ">=5.3.8",
         "ext-gd": "*",
         "jwage/purl": "dev-cptechinc",
-        "atk4/dsql": "1.1"
+        "atk4/dsql": "1.1",
+        "cptechinc/dplus-base": "dev-master"
     },
     "autoload": {
         "files": [ "wire/core/ProcessWire.php" ]

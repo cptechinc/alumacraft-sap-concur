@@ -14,5 +14,9 @@ return array(
     'd2530fee1ad11fd818499d62422c3f49' => $baseDir . '/src/Concur_PurchaseOrder.class.php',
     'ee7433e091775c538a8161bbec97f39d' => $baseDir . '/src/Concur_PurchaseOrderReceipts.class.php',
     'ee86fe96f570575229ed829986315a1f' => $baseDir . '/src/Concur_Invoice.class.php',
+    '7a1ea243d42482188f5de3f31405b315' => $baseDir . '/src/Concur_ListItem.class.php',
+    'b0f26f7d2bc58842bc1c5492702b7701' => $baseDir . '/src/Concur_ListItemInventory.class.php',
+    '8ae7384734e9ca4df2607c09212aee89' => $baseDir . '/src/Concur_Extract.class.php',
+    '84381b73dc823d5832a8ca4bd6180296' => $baseDir . '/src/Concur_ExtractPurchaseOrder.class.php',
     '9eac9b0d31e58ebf7f457f5eec03cd5b' => $baseDir . '/src/ConcurFactory.class.php',
 );
