@@ -56,7 +56,8 @@
 		 */
 		protected function get_value($values, $field, $fieldproperties) {
 			$field = !empty($fieldproperties['dbcolumn']) ? $fieldproperties['dbcolumn'] : $field;
-			return $this->format_value($values[$field], $fieldproperties);
+			$value = isset($values[$field]) ? $values[$field] : '';
+			return $this->format_value($value, $fieldproperties);
         }
 		
 		/**

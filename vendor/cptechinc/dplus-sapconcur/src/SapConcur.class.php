@@ -19,6 +19,21 @@
 		protected $response;
 		
 		/**
+		 * Request Body for cURL
+		 * @var array
+		 */
+		protected $request;
+		
+		protected function curl_post($url, $body) {
+			$curl = new Curl();
+			$curl->add_acceptheader('json');
+			$curl->set_contenttype('url');
+			$curl->set_authentication('oauth2');
+			$curl->authentication->set_accesstoken($this->get_accesstoken());
+			return $curl->post($url, $body);
+		}
+		
+		/**
 		 * Sends POST cURL request
 		 * @param  string $url  URL to make request to
 		 * @param  array  $body Key Value array to send
@@ -38,6 +53,20 @@
 			return $this->execute_andgetresponse($curl);
 		}
 		
+		/**
+		 * Sends PUT cURL request
+		 * @param  string $url  URL to make request to
+		 * @param  array  $body Key Value array to send
+		 * @return array        Response from Endpoint or response from cURL
+		 */
+		protected function curl_put($url, $body) {
+			$curl = new Curl();
+			$curl->add_acceptheader('json');
+			$curl->set_contenttype('url');
+			$curl->set_authentication('oauth2');
+			$curl->authentication->set_accesstoken($this->get_accesstoken());
+			return $curl->put($url, $body);
+		}
 		/**
 		 * Sends PUT cURL request
 		 * @param  string $url  URL to make request to
@@ -65,6 +94,35 @@
 		 * @param  array  $body Key Value array to send //NOTE NOT USED
 		 * @return array        Response from Endpoint or response from cURL
 		 */
+		protected function curl_get($url, $body = '') {
+			$curl = new Curl();
+			$curl->add_acceptheader('json');
+			$curl->set_contenttype('url');
+			$curl->set_authentication('oauth2');
+			$curl->authentication->set_accesstoken($this->get_accesstoken());
+			return $curl->get($url, $body);
+		}
+		
+		/**
+		 * Sends GET cURL request
+		 * @param  string $url  URL to make request to
+		 * @param  array  $body Key Value array to send //NOTE NOT USED
+		 * @return array        Response from Endpoint or response from cURL
+		 */
+		protected function curl_getcsv($url, $body = '') {
+			$curl = new Curl();
+			$curl->add_acceptheader('csv');
+			$curl->set_contenttype('url');
+			$curl->set_authentication('oauth2');
+			$curl->authentication->set_accesstoken($this->get_accesstoken());
+			return $curl->get($url, $body);
+		}
+		/**
+		 * Sends GET cURL request
+		 * @param  string $url  URL to make request to
+		 * @param  array  $body Key Value array to send //NOTE NOT USED
+		 * @return array        Response from Endpoint or response from cURL
+		 */
 		protected function get_curl($url, $body = '') {
 			$headers = $this->generate_defaultcurlheader();
 			$curl = $this->get_defaultcurl($url, $headers);
@@ -79,7 +137,8 @@
 		 */
 		protected function generate_defaultcurlheader() {
 			if (strtotime('now') > Concur_Authentication::$tokenexpires) {
-				Concur_Authentication::re_authenticate();
+				$authentication = new Concur_Authentication();
+				$authentication->create_authenticationtoken();
 			}
 			$accesstoken = Concur_Authentication::$authtoken;
 			return $headers = [
@@ -87,6 +146,14 @@
 				'Accept: application/json',
 				"Authorization: Bearer $accesstoken"
 			];
+		}
+		
+		protected function get_accesstoken() {
+			if (strtotime('now') > Concur_Authentication::$tokenexpires) {
+				$authentication = new Concur_Authentication();
+				$authentication->create_authenticationtoken();
+			}
+			return Concur_Authentication::$authtoken;
 		}
 		
 		/**
@@ -113,6 +180,8 @@
 		 */
 		protected function execute_andgetresponse($curl) {
 			$this->response = json_decode(curl_exec($curl), true);
+			$curlinfo = curl_getinfo($curl);
+			$this->response['http_code'] = $curlinfo['http_code'];
 			
 			if ($this->response) {
 				if (!isset($this->response['error'])) {
@@ -121,7 +190,8 @@
 			} else {
 				$this->response = array(
 					'error' => true,
-					'message' => curl_error($curl),
+					'http_code' => 404,
+					'Message' => curl_error($curl),
 					'response' => false
 				);
 			}

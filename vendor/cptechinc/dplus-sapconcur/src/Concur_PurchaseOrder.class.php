@@ -63,9 +63,8 @@
 				'Custom7'                   => array('dbcolumn' => 'ItemID', 'required' => false),
 			)
 		);
-		
 		/* =============================================================
-			CONCUR INTERFACE FUNCTIONS
+			EXTERNAL / PUBLIC FUNCTIONS
 		============================================================ */
 		/**
 		 * Sends GET Request to retreive Purchase Order
@@ -74,78 +73,10 @@
 		 */
 		public function get_purchaseorder($ponbr) {
 			$url = $this->endpoints['purchase-order'] . "/$ponbr";
-			return $this->get_curl($url);
+			$response = $this->curl_get($url);
+			return $response['response'];
 		}
 		
-		/**
-		 * Verifies if Purchase Order Exists at Concur
-		 * @param  string $ponbr Purchase Order Number
-		 * @return bool          Does Purchase Order Number exist?
-		 */
-		public function does_poexist($ponbr) {
-			$response = $this->get_purchaseorder($ponbr);
-			return (isset($response['PurchaseOrderNumber'])) ? true : false;
-		}
-		
-		/**
-		 * Sends a POST request to add Purchase Order at Concur
-		 * @param  string $ponbr Purchase Order Number
-		 * @return array         Response
-		 */
-		public function create_purchaseorder($ponbr) {
-			$purchaseorder = $this->create_purchaseorderheader($ponbr);
-			$purchaseorder['LineItem'] = $this->create_purchaseorderdetails($ponbr);
-			$this->response =  $this->post_curl($this->endpoints['purchase-order'], $purchaseorder, $json = true);
-			$this->process_response();
-			return $this->response;
-		}
-		
-		/**
-		 * Sends a PUT request to update Purchase Order at Concur
-		 * @param  string $ponbr Purchase Order Number
-		 * @return array         Response
-		 */
-		public function update_purchaseorder($ponbr) {
-			$purchaseorder = $this->create_purchaseorderheader($ponbr);
-			$purchaseorder['LineItem'] = $this->create_purchaseorderdetails($ponbr);
-			$this->response = $this->put_curl($this->endpoints['purchase-order'], $purchaseorder, $json = true);
-			$this->process_response();
-			return $this->response;
-		}
-		
-		/**
-		 * Processes Response and logs Errors if needed
-		 * @return void
-		 */
-		protected function process_response() {
-			$this->response['Status'] = isset($this->response['Status']) ? $this->response['Status'] : '';
-			$this->response['Message'] = isset($this->response['Message']) ? $this->response['Message'] : '';
-			
-			if (isset($this->response['error']) || $this->response['Status'] == 'FAILURE') {
-				$error = !empty($this->response['ErrorCode']) ? "ErrorCode: " . $this->response['ErrorCode'] . " -> " : '';
-				$error .= !empty($this->response['ErrorMessage']) ? $this->response['ErrorMessage'] : $this->response['Message'];
-				$error .= " -> ";
-				$error .= !empty($this->response['FieldCode']) ? "FieldCode: " . $this->response['FieldCode'] : '';
-				$this->log_error($error);
-			} elseif (strpos(strtolower($response['Message']), strtolower('Purchase Order Cannot be updated as it does not exist in system')) !== false) {
-				$error = $response['Message'];
-				$this->log_error($error);
-			}
-		}
-		/* =============================================================
-			ERROR CODES AND POSSIBLE SOLUTIONS
-		============================================================ */
-		/**
-		 * 3000  The Currency Code is missing or invalid
-		 * 2000  There was no vendor found for the supplied Vendor Code and Vendor Address Code, try sending that vendor then, resend PO
-		 * 5007  The Line item total amount cannot be zero, Find Line Item, verify and Ask for cobol changes
-		 * 5501  The line item distributions exceed the line item amount, Line Total is not what was expected for quantity and price, verify then ask for cobol changes
-		 * 8000  The required field is missing, verify that the field code is indeed missing Inform customer
-		 */
-		
-		/* =============================================================
-			CLASS FUNCTIONS
-		============================================================ */
 		/**
 		 * Verifies if Purchase Order exits at Concur 
 		 * If it exists then it updates the Purchase Order
@@ -154,7 +85,7 @@
 		 * @return void
 		 */
 		public function send_purchaseorder($ponbr) {
-			if ($this->does_poexist($ponbr)) {
+			if ($this->does_concurpoexist($ponbr)) {
 				return $this->update_purchaseorder($ponbr);
 			} else {
 				return $this->create_purchaseorder($ponbr);
@@ -207,6 +138,80 @@
 			return $this->response;
 		}
 		
+		/* =============================================================
+			CONCUR INTERFACE FUNCTIONS
+		============================================================ */
+		/**
+		 * Verifies if Purchase Order Exists at Concur
+		 * @param  string $ponbr Purchase Order Number
+		 * @return bool          Does Purchase Order Number exist?
+		 */
+		public function does_concurpoexist($ponbr) {
+			$response = $this->get_purchaseorder($ponbr);
+			return (isset($response['PurchaseOrderNumber'])) ? true : false;
+		}
+		
+		/**
+		 * Sends a POST request to add Purchase Order at Concur
+		 * @param  string $ponbr Purchase Order Number
+		 * @return array         Response
+		 */
+		public function create_purchaseorder($ponbr) {
+			$purchaseorder = $this->create_purchaseorderheader($ponbr);
+			$purchaseorder['LineItem'] = $this->create_purchaseorderdetails($ponbr);
+			$this->response =  $this->post_curl($this->endpoints['purchase-order'], $purchaseorder, $json = true);
+			$this->process_response();
+			return $this->response;
+		}
+		
+		/**
+		 * Sends a PUT request to update Purchase Order at Concur
+		 * @param  string $ponbr Purchase Order Number
+		 * @return array         Response
+		 */
+		public function update_purchaseorder($ponbr) {
+			$purchaseorder = $this->create_purchaseorderheader($ponbr);
+			$purchaseorder['LineItem'] = $this->create_purchaseorderdetails($ponbr);
+			$this->response = $this->put_curl($this->endpoints['purchase-order'], $purchaseorder, $json = true);
+			$this->process_response();
+			return $this->response;
+		}
+		
+		
+		/* =============================================================
+			ERROR CODES AND POSSIBLE SOLUTIONS
+		============================================================ */
+		/**
+		 * 3000  The Currency Code is missing or invalid
+		 * 2000  There was no vendor found for the supplied Vendor Code and Vendor Address Code, try sending that vendor then, resend PO
+		 * 5007  The Line item total amount cannot be zero, Find Line Item, verify and Ask for cobol changes
+		 * 5501  The line item distributions exceed the line item amount, Line Total is not what was expected for quantity and price, verify then ask for cobol changes
+		 * 8000  The required field is missing, verify that the field code is indeed missing Inform customer
+		 */
+		
+		/* =============================================================
+			INTERNAL CLASS FUNCTIONS
+		============================================================ */
+		/**
+		 * Processes Response and logs Errors if needed
+		 * @return void
+		 */
+		protected function process_response() {
+			$this->response['Status'] = isset($this->response['Status']) ? $this->response['Status'] : '';
+			$this->response['Message'] = isset($this->response['Message']) ? $this->response['Message'] : '';
+			
+			if (isset($this->response['error']) || $this->response['Status'] == 'FAILURE') {
+				$error = !empty($this->response['ErrorCode']) ? "ErrorCode: " . $this->response['ErrorCode'] . " -> " : '';
+				$error .= !empty($this->response['ErrorMessage']) ? $this->response['ErrorMessage'] : $this->response['Message'];
+				$error .= " -> ";
+				$error .= !empty($this->response['FieldCode']) ? "FieldCode: " . $this->response['FieldCode'] : '';
+				$this->log_error($error);
+			} elseif (strpos(strtolower($response['Message']), strtolower('Purchase Order Cannot be updated as it does not exist in system')) !== false) {
+				$error = $response['Message'];
+				$this->log_error($error);
+			}
+		}
+		
 		/**
 		 * Separates Purchase orders into 2 arrays, Existing and New
 		 * @param  array $purchaseorders  Purchase Order Numbers
@@ -216,7 +221,7 @@
 			$response = array('existing' => array(), 'new' => array());
 			
 			foreach ($purchaseorders as $ponbr) {
-				$category = $this->does_poexist($ponbr) ? 'existing' : 'new';
+				$category = $this->does_concurpoexist($ponbr) ? 'existing' : 'new';
 				$response[$category][] = $ponbr;
 			}
 			$this->response = $response;

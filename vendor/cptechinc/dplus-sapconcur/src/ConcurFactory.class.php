@@ -17,13 +17,15 @@
 		 * @var array
 		 */
 		protected $endpoints = array(
-			'authentication' => 'Concur_Authentication',
-			'vendor' => 'Concur_Vendor',
-			'purchase-order' => 'Concur_PurchaseOrder',
+			'authentication'          => 'Concur_Authentication',
+			'vendor'                  => 'Concur_Vendor',
+			'purchase-order'          => 'Concur_PurchaseOrder',
 			'purchase-order-receipts' => 'Concur_PurchaseOrderReceipts',
-			'invoice' => 'Concur_Invoice',
-			'list-item' => 'Concur_ListItem',
-			'list-item-inventory' => 'Concur_ListItemInventory'
+			'invoice'                 => 'Concur_Invoice',
+			'list-item'               => 'Concur_ListItem',
+			'list-item-inventory'     => 'Concur_ListItemInventory',
+			'extract'                 => 'Concur_Extract',
+			'extract-purchase-order'  => 'Concur_ExtractPurchaseOrder'
 		);
 		
 		/**
@@ -35,7 +37,7 @@
 			$api = new Concur_Authentication();
 			$api->create_authenticationtoken();
 			
-			if ($api->response['error']) {
+			if ($api->response['server']['error']) {
 				echo json_encode($api->response);
 				exit;
 			}

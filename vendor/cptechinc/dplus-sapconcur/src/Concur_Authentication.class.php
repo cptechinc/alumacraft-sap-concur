@@ -23,25 +23,13 @@
 		 * Sends POST cURL request
 		 * @param  string $url  URL to make request to
 		 * @param  array  $body Key Value array to send
-		 * @param  bool   $json Send body as JSON?
 		 * @return array        Response from Endpoint or response from cURL
 		 */
-		protected function post_curl($url, $body, $json = false) {
-			$headers = $this->generate_defaultcurlheader();
-			$curl = $this->get_defaultcurl($url, $headers);
-			curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($body));
-			return $this->execute_andgetresponse($curl);
-		}
-		
-		/**
-		 * Creates the default HTTP HEADERS Array used for cURL
-		 * @return array default HTTP HEADER
-		 */
-		protected function generate_defaultcurlheader() {
-			return $headers = [
-				'Connection: close',
-				'Accept: application/json'
-			];
+		protected function curl_post($url, $body) {
+			$curl = new Curl();
+			$curl->add_acceptheader('json');
+			$curl->set_contenttype('url');
+			return $curl->post($url, $body);
 		}
 		
 		/**
@@ -58,10 +46,11 @@
 				'password' => $appconfig->concur_password,
 				'credtype '=>'password',
 			];
-			$this->post_curl($this->endpoints['authentication'], $body);
-			$this->accesstoken = $this->response['error'] ? false : $this->response['access_token'];
-			self::$authtoken = $this->response['error'] ? false : $this->response['access_token'];
-			self::$tokenexpires = $this->response['error'] ? false : strtotime('now') + 3600;
+			
+			$this->response = $this->curl_post($this->endpoints['authentication'], $body);
+			$this->accesstoken = $this->response['server']['error'] ? false : $this->response['response']['access_token'];
+			self::$authtoken = $this->response['server']['error'] ? false : $this->response['response']['access_token'];
+			self::$tokenexpires = $this->response['server']['error'] ? false : strtotime('now') + 3600;
 			return $this->response;
 		}
 	}

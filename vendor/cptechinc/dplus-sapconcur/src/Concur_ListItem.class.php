@@ -15,23 +15,29 @@
 		 */
 		protected $structure = array(
 			'header' => array(
-                'ID'         => array('dbcolumn' => '', 'required' => false),
-                'Level1Code' => array('dbcolumn' => '', 'required' => false),
-                'Level2Code' => array('dbcolumn' => '', 'required' => false),
-                'Level3Code' => array('dbcolumn' => '', 'required' => false),
-                'Level4Code' => array('dbcolumn' => '', 'required' => false),
-                'Level5Code' => array('dbcolumn' => '', 'required' => false),
-                'Level6Code' => array('dbcolumn' => '', 'required' => false),
-                'Level7Code' => array('dbcolumn' => '', 'required' => false),
-                'Level8Code' => array('dbcolumn' => '', 'required' => false),
-                'Level9Code' => array('dbcolumn' => '', 'required' => false),
+                'ID'          => array('dbcolumn' => '', 'required' => false),
+                'Level1Code'  => array('dbcolumn' => '', 'required' => false),
+                'Level2Code'  => array('dbcolumn' => '', 'required' => false),
+                'Level3Code'  => array('dbcolumn' => '', 'required' => false),
+                'Level4Code'  => array('dbcolumn' => '', 'required' => false),
+                'Level5Code'  => array('dbcolumn' => '', 'required' => false),
+                'Level6Code'  => array('dbcolumn' => '', 'required' => false),
+                'Level7Code'  => array('dbcolumn' => '', 'required' => false),
+                'Level8Code'  => array('dbcolumn' => '', 'required' => false),
+                'Level9Code'  => array('dbcolumn' => '', 'required' => false),
                 'Level10Code' => array('dbcolumn' => '', 'required' => false),
-                'listID'     => array('dbcolumn' => '', 'required' => false),
-                'Name'       => array('dbcolumn' => '', 'required' => false),
-                'ParentID'   => array('dbcolumn' => '', 'required' => false),
-                'URI'        => array('dbcolumn' => '', 'required' => false),
+                'listID'      => array('dbcolumn' => '', 'required' => false),
+                'Name'        => array('dbcolumn' => '', 'required' => false, 'strlen' => 64),
+                'ParentID'    => array('dbcolumn' => '', 'required' => false),
+                'URI'         => array('dbcolumn' => '', 'required' => false),
             )
 		);
+		
+		/**
+		 * List ID
+		 * @var string
+		 */
+		protected $listID;
 		
 		/* =============================================================
 			CONCUR INTERFACE FUNCTIONS
@@ -61,28 +67,33 @@
         
         /**
          * Sends POST Request to create list item
-         * @param  array $item  Item Key Value array to send
-         * @return array        Array Response
+         * @param  string $listID  Concur List Item ID
+         * @param  array  $item    Item Key Value array to send
+         * @return array           Array Response
          */
-        public function create_listitem(array $item) {
-            $listitem = $this->create_sectionarray($this->structure['header'], $item);
-            $this->response =  $this->post_curl($this->endpoints['list-item'], $listitem, $json = true);
+        public function create_listitem(string $listID, array $item) {
+            $listitem = $this->structure_concuritem($item);
+			$this->request = $listitem;
+            $this->response = $this->post_curl($this->endpoints['list-items'], $listitem, $json = true);
 			$this->process_response();
 			return $this->response;
         }
         
         /**
          * Sends PUT Request to update list item
-         * @param  string $id   Concur List Item ID
-         * @param  array  $item Item Key Value array to send
-         * @return array        Array Response
+         * @param  string $listID   Concur List Item ID
+         * @param  array  $item     Item Key Value array to send
+         * @return array            Array Response
          */
-        public function update_listitem(string $id, array $item) {
-            $listitem = $this->create_sectionarray($this->structure['header'], $item);
-            $this->response =  $this->put_curl($this->endpoints['list-item'], $listitem, $json = true);
+        public function update_listitem(string $listID, array $item) {
+            $listitem = $this->structure_concuritem($item);
+			$this->request = $listitem;
+            $this->response = $this->put_curl($this->endpoints['list-items'] . "/$listID", $listitem, $json = true);
 			$this->process_response();
 			return $this->response;
         }
+		
+		
         
 		/* =============================================================
 			ERROR CODES AND POSSIBLE SOLUTIONS
@@ -92,5 +103,17 @@
 		/* =============================================================
 			CLASS FUNCTIONS
 		============================================================ */
+		/**
+		 * Returns Item Array in the Concur Structure
+		 * // NOTE This also sets listID, and Name properties
+		 * @param  array $item  Item Array based of item_list table
+		 * @return array        Concur Structure for Item
+		 */
+		public function structure_concuritem($item) {
+			$concuritem = $this->create_sectionarray($this->structure['header'], $item);
+			$concuritem['listID'] = $this->listID;
+			$concuritem['Name'] = !empty(trim($concuritem['Name'])) ? $concuritem['Name'] : $concuritem['Level1Code'];
+			return $concuritem;
+		}
 		
 	}

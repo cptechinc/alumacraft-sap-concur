@@ -52,6 +52,58 @@
 			)
 		);
 		
+		/* =============================================================
+			EXTERNAL / PUBLIC FUNCTIONS
+		============================================================ */
+		/**
+		 * Imports a list of sent vendorIDs  into the sendlog_vendor table
+		 * @return void
+		 */
+		public function import_concurvendors() {
+			$concurvendors = $this->get_concurvendors();
+			$concurvendorIDs = array_column($concurvendors, 'VendorCode');
+			
+			foreach ($concurvendorIDs as $vendorID)  {
+				$this->log_sendlogvendor($vendorID);
+			}
+		}
+		
+		 /**
+ 		 * Handles both Updating and Creating Vendors for Concur
+ 		 * @param  bool   $forceupdates Send only the Updated Items or Force Send All ?
+ 		 * @return array                Responses for each send
+ 		 */
+		public function batch_vendors($forceupdates = false) {
+			$updatedafter = $forceupdates ? date('Y-m-d', strtotime('-1 days')) : '';
+			$existingvendors = get_vendorIDsinsendlog($updatedafter);
+			$newvendors = get_vendorIDsnotinsendlog();
+			
+			$response = array(
+				'updated' => $this->update_vendors($existingvendors),
+				//'created' => $this->create_vendors($newvendors)
+			);
+			$this->response = $response;
+			return $this->response;
+		}
+		
+		/**
+		 * Verifies if Vendor Exists at Concur
+		 * If it exists then it updates the Vendor
+		 * If not, it will create the Vendor
+		 * @param  string $vendorID  Vendor Code
+		 * @return void
+		 */
+		public function send_vendor($vendorID) {
+			if (does_vendorhavesendlog($vendorID)) {
+				return $this->update_vendor($vendorID);
+			} else {
+				return $this->create_vendor($vendorID);
+			}
+		}
+		
+		/* =============================================================
+			CONCUR INTERFACE FUNCTIONS
+		============================================================ */
 		/**
 		 * Sends GET request for vendors and returns the response
 		 * @param  string $url URL to fetch Vendors
@@ -68,13 +120,13 @@
 		 * Returns an array of Existing Vendor Codes
 		 * @return array Vendor Codes
 		 */
-		public function get_existingvendors() {
+		public function get_concurvendors() {
 			$response = $this->get_vendors();
-			$vendorlist = array_column($response['Vendor'], 'VendorCode');
+			$vendorlist = $response['Vendor'];
 			
 			while (!empty($response['NextPage'])) {
 				$response = $this->get_vendors($response['NextPage']);
-				$vendorlist = array_merge($vendorlist,array_column($response['Vendor'], 'VendorCode'));
+				$vendorlist = array_merge($vendorlist, $response['Vendor']);
 			}
 			return $vendorlist;
 		}
@@ -87,7 +139,8 @@
 		public function get_vendor($vendorID) {
 			$url = new Purl\Url($this->endpoints['vendor']);
 			$url->query->set('vendorCode', $vendorID);
-			return $this->get_curl($url->getUrl());
+			$response = $this->curl_get($url->getUrl());
+			return $response['response'];
 		}
 		
 		/**
@@ -96,7 +149,7 @@
 		 * @param  string $vendorID Vendor ID to validate
 		 * @return bool             Does Vendor Exist at Concur
 		 */
-		public function does_vendorexist($vendorID) {
+		public function does_concurvendorexist($vendorID) {
 			$vendors = $this->get_vendor($vendorID);
 			return ($vendors['TotalCount']) ? true : false;
 		}
@@ -109,31 +162,9 @@
 		public function create_vendor($vendorID) {
 			$dbvendor = get_dbvendor($vendorID);
 			$vendor = $this->create_sectionarray($this->structure['header'], $dbvendor);
-			$body = $this->get_vendorsendschema();
-			$body['Items'][] = $vendor;
-			$body['TotalCount'] = 1;
-			$body['Vendor'][] = $vendor;
-			return $this->post_curl($this->endpoints['vendor'], $body, $json = true);
-		}
-		
-		/**
-		 * Sends a POST request to create Vendors at Concur
-		 * @param  array $vendors   Vendor IDs to use to load from database
-		 * @return array            Response
-		 */
-		public function create_vendors($vendors) {
-			$vendorIDs = get_dbvendorsinclude($vendors);
-			$response = array();
-			
-			foreach ($vendorIDs as $dbvendor) {
-				$body = $this->get_vendorsendschema();
-				$vendor = $this->create_sectionarray($this->structure['header'], $dbvendor);
-				$body['Items'][] = $vendor;
-				$body['Vendor'][] = $vendor;
-				$body['TotalCount'] = 1;
-				$response[] = $this->post_curl($this->endpoints['vendor'], $body, $json = true);
-			}
-			return $response;
+			$body = $this->create_vendorsendbody($vendor);
+			$response = $this->post_curl($this->endpoints['vendor'], $body);
+			return $response['response'];
 		}
 		
 		/**
@@ -144,68 +175,32 @@
 		public function update_vendor($vendorID) {
 			$dbvendor = get_dbvendor($vendorID);
 			$vendor = $this->create_sectionarray($this->structure['header'], $dbvendor);
-			$body = $this->get_vendorsendschema();
-			$body['Items'][] = $vendor;
-			$body['TotalCount'] = 1;
-			$body['Vendor'][] = $vendor;
-			return $this->put_curl($this->endpoints['vendor'], $body, $json = true);
+			$body = $this->create_vendorsendbody($vendor);
+			$response = $this->curl_put($this->endpoints['vendor'], $body);
+			return $response['response'];
 		}
 		
+		/* =============================================================
+			INTERNAL CLASS FUNCTIONS
+		============================================================ */
 		/**
-		 * Sends a PUT request to update current Vendors at Concur
-		 * @param  array $vendors  Vendor IDs
-		 * @return array            Response
+		 * Adds or Updates send log for an Vendor ID
+		 * @param  string $vendorID Vendor ID
+		 * @return bool             Was $vendorID Able to be added / updated in the send log
 		 */
-		public function update_vendors(array $vendors) {
-			$vendorIDs = get_dbvendorsinclude($vendors);
-			$response = array();
-			
-			foreach ($vendorIDs as $dbvendor) {
-				$body = $this->get_vendorsendschema();
-				$vendor = $this->create_sectionarray($this->structure['header'], $dbvendor);
-				$body['Items'][] = $vendor;
-				$body['Vendor'][] = $vendor;
-				$body['TotalCount'] = 1;
-				$response[] = $this->put_curl($this->endpoints['vendor'], $body, $json = true);
-			}
-			return $response;
-		}
-		
-		/**
-		 * Verifies if Vendor Exists at Concur
-		 * If it exists then it updates the Vendor
-		 * If not, it will create the Vendor
-		 * @param  string $vendorID  Vendor Code
-		 * @return void
-		 */
-		public function send_vendor($vendorID) {
-			if ($this->does_vendorexist($vendorID)) {
-				$this->update_vendor($vendorID);
+		protected function log_sendlogvendor($vendorID) {
+			if (does_vendorhavesendlog($vendorID)) {
+				return update_sendlogvendor($vendorID, date('Y-m-d H:i:s'));
 			} else {
-				$this->create_vendor($vendorID);
+				return insert_sendlogvendor($vendorID, date('Y-m-d H:i:s'));
 			}
-		}
-		
-		/**
-		 * Batch Send Vendors to Update / Create
-		 * @return array response arrays from both the Created and Updated
-		 */
-		public function batch_vendors() {
-			$existingvendors = $this->get_existingvendors();
-			$newvendors = get_dbvendoridsexclude($existingvendors);
-			$response = array(
-				'updated' => $this->update_vendors($existingvendors),
-				'created' => $this->create_vendors($newvendors)
-			);
-			$this->response = $response;
-			return $this->response;
 		}
 		
 		/**
 		 * Returns the array format to send updates or adding of vendors at Concur API
 		 * @return array Update Array
 		 */
-		public function get_vendorsendschema() {
+		protected function get_vendorsendschema() {
 			return array(
 				'Items' => array(),
 				'NextPage' => '',
@@ -213,5 +208,46 @@
 				'TotalCount' => 1,
 				'Vendor' => array()
 			);
+		}
+		
+		/**
+		 * Returns the Send Array needed for the Vendor
+		 * @param  array $vendor Concur Structured Vendor Array
+		 * @return array         Vendor Send Array
+		 */
+		protected function create_vendorsendbody($vendor) {
+			$body = $this->get_vendorsendschema();
+			$body['Items'][] = $vendor;
+			$body['TotalCount'] = 1;
+			$body['Vendor'][] = $vendor;
+			return $vendor;
+		}
+		
+		/**
+		 * Sends a PUT request to update current Vendors at Concur
+		 * @param  array $vendorIDs  Vendor IDs
+		 * @return array             Response
+		 */
+		protected function update_vendors(array $vendorIDs) {
+			$response = array();
+			
+			foreach ($vendorIDs as $vendorID) {
+				$response[] = $this->update_vendor($vendorID);
+			}
+			return $response;
+		}
+		
+		/**
+		 * Sends a POST request to create Vendors at Concur
+		 * @param  array $vendorIDs Vendor IDs to use to load from database
+		 * @return array            Response
+		 */
+		protected function create_vendors($vendorIDs) {
+			$response = array();
+			
+			foreach ($vendorIDs as $dbvendor) {
+				$response[] = $this->create_vendor($vendorID);
+			}
+			return $response;
 		}
 	}

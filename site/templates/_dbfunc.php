@@ -65,6 +65,125 @@
 		}
 	}
 	
+	
+	/**
+	 * Returns if there's a sendlog_vendor record for vendor
+	 * @param  string $vendorID Vendor ID to check for
+	 * @param  bool   $debug    Run in debug? If so, return SQL Query
+	 * @return bool             Does Item have a send log record?
+	 */
+	function does_vendorhavesendlog($vendorID, $debug = false) {
+		$q = (new QueryBuilder())->table('sendlog_vendor');
+		$q->field($q->expr('IF(COUNT(*) > 0, 1, 0)'));
+		$q->where('VendorCode', $vendorID);
+		$sql = DplusWire::wire('database')->prepare($q->render());
+		
+		if ($debug) {
+			return $q->generate_sqlquery();
+		} else {
+			$sql->execute($q->params);
+			return $sql->fetchColumn();
+		}
+	}
+	
+	/**
+	 * Updates the sendlog_vendor table when an vendor has been sent to concur to be updated
+	 * @param  string $vendorID Vendor ID
+	 * @param  string $date     MySQL datetime MM-DD-YYYY HH:MM:SS
+	 * @param  bool   $debug    Run in debug? If so, return SQL Query
+	 * @return string           Updated rows count (1 | 0)
+	 */
+	function update_sendlogvendor($vendorID, $date, $debug = false) {
+		$q = (new QueryBuilder())->table('sendlog_vendor');
+		$q->mode('update');
+		$q->set('updated', $date);
+		$q->where('VendorCode', $vendorID);
+		$sql = DplusWire::wire('database')->prepare($q->render());
+		
+		if ($debug) {
+			return $q->generate_sqlquery();
+		} else {
+			$sql->execute($q->params);
+			return $sql->rowCount();
+		}
+	}
+	
+	/**
+	 * Inserts a record for the sendlog_item_list table when the item has been sent to Concur
+	 * @param  string $vendorID Vendor ID / Code
+	 * @param  string $date     MySQL datetime MM-DD-YYYY HH:MM:SS
+	 * @param  bool   $debug    Run in debug? If so, return SQL Query
+	 * @return string           Last Insert ID
+	 */
+	function insert_sendlogvendor($vendorID, $date, $debug = false) {
+		$date = date('Y-m-d H:i:s', strtotime($date));
+		$q = (new QueryBuilder())->table('sendlog_vendor');
+		$q->mode('insert');
+		$q->set('VendorCode', $vendorID);
+		$q->set('updated', $date);
+		$sql = DplusWire::wire('database')->prepare($q->render());
+		
+		if ($debug) {
+			return $q->generate_sqlquery();
+		} else {
+			$sql->execute($q->params);
+			return DplusWire::wire('database')->lastInsertId();
+		}
+	}
+	
+	/**
+	 * Returns an Array of Vendor Codes (IDs) from the sendlog
+	 * @param  bool   $debug Run in debug? If so, return SQL Query
+	 * @return array         ItemIDs
+	 */
+	function get_sendlogvendors($debug = false) {
+		$q = (new QueryBuilder())->table('sendlog_vendor');
+		$q->field('VendorCode');
+		$sql = DplusWire::wire('database')->prepare($q->render());
+		
+		if ($debug) {
+			return $q->generate_sqlquery();
+		} else {
+			$sql->execute();
+			return $sql->fetchAll(PDO::FETCH_COLUMN);
+		}
+	}
+	
+	function get_vendorIDsinsendlog($updatedafter = '', $debug = false) {
+		$q = (new QueryBuilder())->table('sendlog_vendor');
+		$q->field('VendorCode');
+		if (!empty($updatedafter)) {
+			$updatedafter = date('Y-m-d', strtotime($updatedafter));
+			$q->where($q->expr('DATE(updated)'), '<', $updatedafter);
+			$q->where($q->expr('DATE(date)'), '>', $updatedafter);
+		}
+		$q->limit(2);
+		$sql = DplusWire::wire('database')->prepare($q->render());
+		
+		if ($debug) {
+			return $q->generate_sqlquery();
+		} else {
+			$sql->execute($q->params);
+			return $sql->fetchAll(PDO::FETCH_COLUMN);
+		}
+	}
+	
+	function get_vendorIDsnotinsendlog($debug = false) {
+		$logquery  = (new QueryBuilder())->table('sendlog_vendor');
+		$logquery->field('VendorCode');
+		
+		$q = (new QueryBuilder())->table('vendors');
+		$q->field('VendorCode');
+		$q->where($q->expr('TRIM(VendorCode)'), 'not in', $logquery);
+		$sql = DplusWire::wire('database')->prepare($q->render());
+		
+		if ($debug) {
+			return $q->generate_sqlquery();
+		} else {
+			$sql->execute($q->params);
+			return $sql->fetchAll(PDO::FETCH_COLUMN);
+		}
+	}
 	/* =============================================================
 		PURCHASE ORDER FUNCTIONS
 	============================================================ */
@@ -138,6 +257,7 @@
 	============================================================ */
 	/**
 	 * Returns all the Purchase Order Numbers available to send receipts for 
+	 * @param  int    $limit How many Purchase Order Numbers to return
 	 * @param  string $ponbr  Purchase Order Number to start after
 	 * @param  bool   $debug  Run in debug? If so, return SQL Query
 	 * @return array          One Dimenisonal array e.g. ('1004', '1005')
@@ -378,11 +498,13 @@
 	 * @param  bool   $debug  Run in debug? If so, return SQL Query
 	 * @return string         Updated rows count (1 | 0)
 	 */
-	function update_itemsendlog($itemID, $date, $debug = false) {
+	function update_sendlogitem($itemID, $date, $debug = false) {
 		$q = (new QueryBuilder())->table('sendlog_item_list');
 		$q->mode('update');
 		$q->set('updated', $date);
 		$q->where('ItemID', $itemID);
+		$sql = DplusWire::wire('database')->prepare($q->render());
+		
 		if ($debug) {
 			return $q->generate_sqlquery();
 		} else {
@@ -398,11 +520,13 @@
 	 * @param  bool   $debug  Run in debug? If so, return SQL Query
 	 * @return string         Last Insert ID
 	 */
-	function insert_itemsendlog($itemID, $date, $debug = false) {
+	function insert_sendlogitem($itemID, $date, $debug = false) {
+		$date = date('Y-m-d H:i:s', strtotime($date));
 		$q = (new QueryBuilder())->table('sendlog_item_list');
 		$q->mode('insert');
 		$q->set('ItemID', $itemID);
 		$q->set('updated', $date);
+		$sql = DplusWire::wire('database')->prepare($q->render());
 		
 		if ($debug) {
 			return $q->generate_sqlquery();
@@ -413,12 +537,31 @@
 	}
 	
 	/**
+	 * Returns an Array of ItemIDs
+	 * @param  bool   $debug Run in debug? If so, return SQL Query
+	 * @return array         ItemIDs
+	 */
+	function get_sendlogitemids($debug = false) {
+		$q = (new QueryBuilder())->table('sendlog_item_list');
+		$q->field('ItemID');
+		$sql = DplusWire::wire('database')->prepare($q->render());
+		
+		if ($debug) {
+			return $q->generate_sqlquery();
+		} else {
+			$sql->execute();
+			return $sql->fetchAll(PDO::FETCH_COLUMN);
+		}
+	}
+	
+	/**
 	 * Returns Item List
 	 * @param  int    $limit How Many Items to return
 	 * @param  string $start Start after X
+	 * @param  bool   $debug Run in debug? If so, return SQL Query
 	 * @return array         Item List
 	 */
-	function get_itemlist($limit = 0, $start = '') {
+	function get_itemlist($limit = 0, $start = '', $debug = false) {
 		$q = (new QueryBuilder())->table('item_list');
 		
 		if (!empty($start)) {
@@ -428,11 +571,51 @@
 		if ($limit) {
 			$q->limit($limit);
 		}
+		$sql = DplusWire::wire('database')->prepare($q->render());
 		
 		if ($debug) {
 			return $q->generate_sqlquery();
 		} else {
 			$sql->execute($q->params);
-			return $sql->rowCount();
+			return $sql->fetchAll(PDO::FETCH_ASSOC);
+		}
+	}
+	
+	function get_itemsinsendlog($updatedafter = '', $debug = false) {
+		$q = (new QueryBuilder())->table('item_list');
+		$q->field('item_list.ItemID');
+		$q->field('ItemDescription');
+		$q->join('sendlog_item_list.ItemID', 'ItemID');
+		if (!empty($updatedafter)) {
+			$updatedafter = date('Y-m-d', strtotime($updatedafter));
+			$q->where($q->expr('DATE(sendlog_item_list.updated)'), '<', $updatedafter);
+			$q->where($q->expr('DATE(item_list.date)'), '>', $updatedafter);
+		}
+		$sql = DplusWire::wire('database')->prepare($q->render());
+		
+		if ($debug) {
+			return $q->generate_sqlquery();
+		} else {
+			$sql->execute($q->params);
+			return $sql->fetchAll(PDO::FETCH_ASSOC);
+		}
+	}
+	
+	function get_itemsnotinsendlog($debug = false) {
+		$logquery  = (new QueryBuilder())->table('sendlog_item_list');
+		$logquery->field('ItemID');
+		
+		$q = (new QueryBuilder())->table('item_list');
+		$q->field('ItemID');
+		$q->field('ItemDescription');
+		$q->where('ItemID', 'not in', $logquery);
+		$q->limit(75000);
+		$sql = DplusWire::wire('database')->prepare($q->render());
+		
+		if ($debug) {
+			return $q->generate_sqlquery();
+		} else {
+			$sql->execute($q->params);
+			return $sql->fetchAll(PDO::FETCH_ASSOC);
 		}
 	}
