@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "649f8540a3e8174d1d83450324692055",
+    "content-hash": "084d9a223daf1d09d6d6c5f0407adc32",
     "packages": [
         {
             "name": "atk4/core",
@@ -110,41 +110,100 @@
         },
         {
             "name": "cptechinc/dplus-base",
-            "version": "dev-master",
+            "version": "dev-psr4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cptechinc/dplus-base.git",
-                "reference": "e33415eec46c034f481e373ae9c8a6947c1d31df"
+                "reference": "4ce7528e905ab03b46c8ac98312c61e3f564fcf6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cptechinc/dplus-base/zipball/e33415eec46c034f481e373ae9c8a6947c1d31df",
-                "reference": "e33415eec46c034f481e373ae9c8a6947c1d31df",
+                "url": "https://api.github.com/repos/cptechinc/dplus-base/zipball/4ce7528e905ab03b46c8ac98312c61e3f564fcf6",
+                "reference": "4ce7528e905ab03b46c8ac98312c61e3f564fcf6",
                 "shasum": ""
+            },
+            "require": {
+                "atk4/dsql": "1.1"
             },
             "type": "library",
             "autoload": {
+                "psr-4": {
+                    "Dplus\\Base\\": "src/"
+                },
                 "files": [
-                    "src/traits/CreateFromObjectArray.trait.php",
-                    "src/traits/CreateClassArray.trait.php",
-                    "src/traits/AttributeParser.trait.php",
-                    "src/traits/ThrowError.trait.php",
-                    "src/traits/MagicMethods.trait.php",
-                    "src/traits/Filterable.trait.php",
-                    "src/DplusDateTime.class.php",
-                    "src/Stringer.class.php",
-                    "src/QueryBuilder.class.php",
-                    "src/Curl.class.php"
+                    "src/utfport.php"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Paul Gomez",
+                    "email": "paul@cptechinc.com",
+                    "homepage": "https://www.cptechinc.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Barbara Bullemer",
+                    "email": "barbara@cptechinc.com",
+                    "homepage": "https://www.cptechinc.com",
+                    "role": "Developer"
+                }
+            ],
             "description": "Base Classes and Attributes",
             "homepage": "https://github.com/cptechinc/dplus-base",
             "keywords": [
                 "dplus-attributes",
                 "dplus-base"
             ],
-            "time": "2018-10-03T20:54:57+00:00"
+            "time": "2018-10-04T18:20:02+00:00"
+        },
+        {
+            "name": "cptechinc/dplus-sapconcur",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cptechinc/dplus-sapconcur.git",
+                "reference": "966cf20f2d8a2da2376cc89e4ee05f6f6640285c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cptechinc/dplus-sapconcur/zipball/966cf20f2d8a2da2376cc89e4ee05f6f6640285c",
+                "reference": "966cf20f2d8a2da2376cc89e4ee05f6f6640285c",
+                "shasum": ""
+            },
+            "require": {
+                "cptechinc/dplus-base": "dev-psr4",
+                "jwage/purl": "dev-cptechinc"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "dplus\\sapconcur\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Paul Gomez",
+                    "email": "paul@cptechinc.com",
+                    "homepage": "https://www.cptechinc.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Barbara Bullemer",
+                    "email": "barbara@cptechinc.com",
+                    "homepage": "https://www.cptechinc.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Classes for SAP Concur Integration into Dplus",
+            "homepage": "http://github.com/cptechinc/dplus-sap-concur",
+            "keywords": [
+                "dplus-concur",
+                "dplus-sap-concur",
+                "sap-concur"
+            ],
+            "time": "2018-10-04T17:27:03+00:00"
         },
         {
             "name": "jeremykendall/php-domain-parser",
@@ -238,7 +297,8 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "jwage/purl": 20,
-        "cptechinc/dplus-base": 20
+        "cptechinc/dplus-base": 20,
+        "cptechinc/dplus-sapconcur": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

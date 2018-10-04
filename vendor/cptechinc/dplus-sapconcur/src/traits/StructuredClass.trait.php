@@ -1,4 +1,6 @@
 <?php 
+	namespace dplus\sapconcur;
+	
 	/**
 	 * Adds definition of Properties and functions needed
 	 * for endpoints that have defined structures

@@ -1,4 +1,6 @@
 <?php 
+	namespace dplus\sapconcur;
+	
 	/**
 	 * Class to handle dealing with Purchase Orders
 	 */

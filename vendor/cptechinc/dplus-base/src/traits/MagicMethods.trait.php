@@ -1,4 +1,6 @@
 <?php 
+	namespace Dplus\Base;
+	
 	/**
 	 * Traits that provide Magic Methods
 	 * Functions include __get(), __isset()

@@ -15,7 +15,6 @@ include_once("./_func.php"); // include our shared functions
 include_once("./_dbfunc.php"); // include our shared functions
 
 include_once($config->paths->vendor."cptechinc/dplus-processwire/vendor/autoload.php");
-include_once($config->paths->vendor."cptechinc/dplus-sapconcur/vendor/autoload.php");
 
 $page->fullURL = new \Purl\Url($page->httpUrl);
 $page->fullURL->path = '';

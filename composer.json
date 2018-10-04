@@ -6,10 +6,16 @@
     "license": "MPL-2.0",
     "homepage": "https://github.com/cptechinc/alumacraft-sap-concur",
     "minimum-stability": "dev",
-    "repositories": [{
-        "type": "git",
-        "url": "https://github.com/cptechinc/purl.git"
-    }],
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/cptechinc/purl.git"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/cptechinc/dplus-base.git"
+        }
+    ],
     "authors": [
         {
             "name": "Paul Gomez",
@@ -29,7 +35,8 @@
         "ext-gd": "*",
         "jwage/purl": "dev-cptechinc",
         "atk4/dsql": "1.1",
-        "cptechinc/dplus-base": "dev-master"
+        "cptechinc/dplus-base": "dev-psr4",
+        "cptechinc/dplus-sapconcur": "dev-master"
     },
     "autoload": {
         "files": [ "wire/core/ProcessWire.php" ]

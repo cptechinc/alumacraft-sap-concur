@@ -1,4 +1,6 @@
 <?php
+	namespace Dplus\Base;
+	
 	/**
 	 * Functions that let you create objects from array or from another object
 	 * by looping through indexes or properties

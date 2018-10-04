@@ -3,19 +3,30 @@
     "type": "library",
     "description": "Base Classes and Attributes",
     "keywords": ["dplus-base", "dplus-attributes"],
-    "homepage": "https://github.com/cptechinc/dplus-base",
+	"homepage": "https://github.com/cptechinc/dplus-base",
+	"authors": [
+        {
+            "name": "Paul Gomez",
+            "email": "paul@cptechinc.com",
+            "homepage": "https://www.cptechinc.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Barbara Bullemer",
+            "email": "barbara@cptechinc.com",
+            "homepage": "https://www.cptechinc.com",
+            "role": "Developer"
+        }
+    ],
+	"require": {
+		"atk4/dsql": "1.1"
+	},
 	"autoload": {
-		"files": [
-			"src/traits/CreateFromObjectArray.trait.php",
-			"src/traits/CreateClassArray.trait.php",
-			"src/traits/AttributeParser.trait.php",
-			"src/traits/ThrowError.trait.php",
-			"src/traits/MagicMethods.trait.php",
-			"src/traits/Filterable.trait.php",
-			"src/DplusDateTime.class.php",
-			"src/Stringer.class.php",
-			"src/QueryBuilder.class.php",
-			"src/Curl.class.php"
+		"psr-4": {
+			"Dplus\\Base\\": "src/"
+		},
+		"files":[
+			"src/utfport.php"
 		]
 	}
 }

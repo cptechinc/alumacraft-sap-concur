@@ -1,4 +1,6 @@
 <?php
+	namespace dplus\sapconcur;
+	
 	class Concur_Invoice extends Concur_Endpoint {
 		use StructuredClassTraits;
 		
