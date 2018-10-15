@@ -1,13 +1,14 @@
 <?php
 	namespace Dplus\Base;
+	use \ProcessWire\WireInput;
 	
 	trait Filterable {
 		/**
 		 * Looks through the $input->get for properties that have the same name
 		 * as filterable properties, then we populate $this->filter with the key and value
-		 * @param  ProcessWire\WireInput $input Use the get property to get at the $_GET[] variables
+		 * @param  \ProcessWire\WireInput $input Use the get property to get at the $_GET[] variables
 		 */
-		public function generate_filter(ProcessWire\WireInput $input) {
+		public function generate_filter(WireInput $input) {
 			if (!$input->get->filter) {
 				$this->filters = false;
 			} else {
@@ -33,9 +34,9 @@
 		/**
 		 * Looks through the $input->get for properties that have the same name
 		 * as filterable properties, then we populate $this->filter with the key and value
-		 * @param  ProcessWire\WireInput $input Use the get property to get at the $_GET[] variables
+		 * @param  \ProcessWire\WireInput $input Use the get property to get at the $_GET[] variables
 		 */
-		public function generate_defaultfilter(ProcessWire\WireInput $input) {
+		public function generate_defaultfilter(WireInput $input) {
 			if (!$input->get->filter) {
 				$this->filters = false;
 			} else {

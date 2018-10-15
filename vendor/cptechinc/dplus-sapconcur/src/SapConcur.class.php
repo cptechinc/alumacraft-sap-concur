@@ -1,12 +1,12 @@
 <?php 
-	namespace dplus\sapconcur;
+	namespace Dplus\SapConcur;
 	/**
 	 * Template Class to build endpoint classes from and extend
 	 */
 	
 	abstract class Concur_Endpoint {
-		use \dplus\base\MagicMethodTraits;
-		use \dplus\base\ThrowErrorTrait;
+		use \Dplus\Base\MagicMethodTraits;
+		use \Dplus\Base\ThrowErrorTrait;
 		
 		/**
 		 * List of URL Endpoints
@@ -26,33 +26,19 @@
 		 */
 		protected $request;
 		
+		/**
+		 * Sends POST cURL request
+		 * @param  string $url  URL to make request to
+		 * @param  array  $body Key Value array to send
+		 * @return array        Response from Endpoint or response from cURL
+		 */
 		protected function curl_post($url, $body) {
-			$curl = new Curl();
+			$curl = new \Dplus\Base\Curl();
 			$curl->add_acceptheader('json');
 			$curl->set_contenttype('url');
 			$curl->set_authentication('oauth2');
 			$curl->authentication->set_accesstoken($this->get_accesstoken());
 			return $curl->post($url, $body);
-		}
-		
-		/**
-		 * Sends POST cURL request
-		 * @param  string $url  URL to make request to
-		 * @param  array  $body Key Value array to send
-		 * @param  bool   $json Send body as JSON?
-		 * @return array        Response from Endpoint or response from cURL
-		 */
-		protected function post_curl($url, $body, $json = false) {
-			$headers = $this->generate_defaultcurlheader();
-			
-			if ($json) {
-				$headers[] = 'Content-type: application/json';
-				$body = json_encode($body);
-			}
-			
-			$curl = $this->get_defaultcurl($url, $headers);
-			curl_setopt($curl, CURLOPT_POSTFIELDS, $body);
-			return $this->execute_andgetresponse($curl);
 		}
 		
 		/**
@@ -62,32 +48,12 @@
 		 * @return array        Response from Endpoint or response from cURL
 		 */
 		protected function curl_put($url, $body) {
-			$curl = new Curl();
+			$curl = new \Dplus\Base\Curl();
 			$curl->add_acceptheader('json');
 			$curl->set_contenttype('url');
 			$curl->set_authentication('oauth2');
 			$curl->authentication->set_accesstoken($this->get_accesstoken());
 			return $curl->put($url, $body);
-		}
-		/**
-		 * Sends PUT cURL request
-		 * @param  string $url  URL to make request to
-		 * @param  array  $body Key Value array to send
-		 * @param  bool   $json Send body as JSON?
-		 * @return array        Response from Endpoint or response from cURL
-		 */
-		protected function put_curl($url, $body, $json = false) {
-			$headers = $this->generate_defaultcurlheader();
-			
-			if ($json) {
-				$headers[] = 'Content-type: application/json';
-				$body = json_encode($body);
-			}
-			
-			$curl = $this->get_defaultcurl($url, $headers);
-			curl_setopt($curl, CURLOPT_POSTFIELDS, $body);
-			curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
-			return $this->execute_andgetresponse($curl);
 		}
 		
 		/**
@@ -97,7 +63,7 @@
 		 * @return array        Response from Endpoint or response from cURL
 		 */
 		protected function curl_get($url, $body = '') {
-			$curl = new Curl();
+			$curl = new \Dplus\Base\Curl();
 			$curl->add_acceptheader('json');
 			$curl->set_contenttype('url');
 			$curl->set_authentication('oauth2');
@@ -112,7 +78,7 @@
 		 * @return array        Response from Endpoint or response from cURL
 		 */
 		protected function curl_getcsv($url, $body = '') {
-			$curl = new Curl();
+			$curl = new \Dplus\Base\Curl();
 			$curl->add_acceptheader('csv');
 			$curl->set_contenttype('url');
 			$curl->set_authentication('oauth2');
@@ -209,7 +175,7 @@
 			$date = date("Y-m-d h:m:s");
 			$class = get_class($this);
 			$message = "[{$date}] [{$class}] $error";
-			DplusWire::wire('log')->save('sap-errors', $message);
+			\DplusWire::wire('log')->save('sap-errors', $message);
 		}
 		
 		/**

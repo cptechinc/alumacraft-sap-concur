@@ -6,33 +6,37 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit88cf2e8d27212994237a95cfcf23603b
 {
+    public static $files = array (
+        '31598dbb6e918e6fea9d130ff4f8032b' => __DIR__ . '/../..' . '/src/utfport.php',
+    );
+
     public static $prefixLengthsPsr4 = array (
-        'd' => 
+        'D' => 
         array (
-            'dplus\\base\\' => 11,
+            'Dplus\\Base\\' => 11,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'dplus\\base\\' => 
+        'Dplus\\Base\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),
     );
 
     public static $classMap = array (
-        'dplus\\base\\AttributeParser' => __DIR__ . '/../..' . '/src/traits/AttributeParser.trait.php',
-        'dplus\\base\\CreateClassArrayTraits' => __DIR__ . '/../..' . '/src/traits/CreateClassArray.trait.php',
-        'dplus\\base\\CreateFromObjectArrayTraits' => __DIR__ . '/../..' . '/src/traits/CreateFromObjectArray.trait.php',
-        'dplus\\base\\Curl' => __DIR__ . '/../..' . '/src/Curl.class.php',
-        'dplus\\base\\DplusDateTime' => __DIR__ . '/../..' . '/src/DplusDateTime.class.php',
-        'dplus\\base\\Filterable' => __DIR__ . '/../..' . '/src/traits/Filterable.trait.php',
-        'dplus\\base\\HTTPAuthentication' => __DIR__ . '/../..' . '/src/Curl.class.php',
-        'dplus\\base\\HTTPAuthentication_Oauth2' => __DIR__ . '/../..' . '/src/Curl.class.php',
-        'dplus\\base\\MagicMethodTraits' => __DIR__ . '/../..' . '/src/traits/MagicMethods.trait.php',
-        'dplus\\base\\QueryBuilder' => __DIR__ . '/../..' . '/src/QueryBuilder.class.php',
-        'dplus\\base\\StringerBell' => __DIR__ . '/../..' . '/src/Stringer.class.php',
-        'dplus\\base\\ThrowErrorTrait' => __DIR__ . '/../..' . '/src/traits/ThrowError.trait.php',
+        'Dplus\\Base\\AttributeParser' => __DIR__ . '/../..' . '/src/traits/AttributeParser.trait.php',
+        'Dplus\\Base\\CreateClassArrayTraits' => __DIR__ . '/../..' . '/src/traits/CreateClassArray.trait.php',
+        'Dplus\\Base\\CreateFromObjectArrayTraits' => __DIR__ . '/../..' . '/src/traits/CreateFromObjectArray.trait.php',
+        'Dplus\\Base\\Curl' => __DIR__ . '/../..' . '/src/Curl.class.php',
+        'Dplus\\Base\\DplusDateTime' => __DIR__ . '/../..' . '/src/DplusDateTime.class.php',
+        'Dplus\\Base\\Filterable' => __DIR__ . '/../..' . '/src/traits/Filterable.trait.php',
+        'Dplus\\Base\\HTTPAuthentication' => __DIR__ . '/../..' . '/src/Curl.class.php',
+        'Dplus\\Base\\HTTPAuthentication_Oauth2' => __DIR__ . '/../..' . '/src/Curl.class.php',
+        'Dplus\\Base\\MagicMethodTraits' => __DIR__ . '/../..' . '/src/traits/MagicMethods.trait.php',
+        'Dplus\\Base\\QueryBuilder' => __DIR__ . '/../..' . '/src/QueryBuilder.class.php',
+        'Dplus\\Base\\StringerBell' => __DIR__ . '/../..' . '/src/Stringer.class.php',
+        'Dplus\\Base\\ThrowErrorTrait' => __DIR__ . '/../..' . '/src/traits/ThrowError.trait.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

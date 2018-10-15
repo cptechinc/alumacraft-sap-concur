@@ -6,16 +6,16 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'dplus\\base\\AttributeParser' => $baseDir . '/src/traits/AttributeParser.trait.php',
-    'dplus\\base\\CreateClassArrayTraits' => $baseDir . '/src/traits/CreateClassArray.trait.php',
-    'dplus\\base\\CreateFromObjectArrayTraits' => $baseDir . '/src/traits/CreateFromObjectArray.trait.php',
-    'dplus\\base\\Curl' => $baseDir . '/src/Curl.class.php',
-    'dplus\\base\\DplusDateTime' => $baseDir . '/src/DplusDateTime.class.php',
-    'dplus\\base\\Filterable' => $baseDir . '/src/traits/Filterable.trait.php',
-    'dplus\\base\\HTTPAuthentication' => $baseDir . '/src/Curl.class.php',
-    'dplus\\base\\HTTPAuthentication_Oauth2' => $baseDir . '/src/Curl.class.php',
-    'dplus\\base\\MagicMethodTraits' => $baseDir . '/src/traits/MagicMethods.trait.php',
-    'dplus\\base\\QueryBuilder' => $baseDir . '/src/QueryBuilder.class.php',
-    'dplus\\base\\StringerBell' => $baseDir . '/src/Stringer.class.php',
-    'dplus\\base\\ThrowErrorTrait' => $baseDir . '/src/traits/ThrowError.trait.php',
+    'Dplus\\Base\\AttributeParser' => $baseDir . '/src/traits/AttributeParser.trait.php',
+    'Dplus\\Base\\CreateClassArrayTraits' => $baseDir . '/src/traits/CreateClassArray.trait.php',
+    'Dplus\\Base\\CreateFromObjectArrayTraits' => $baseDir . '/src/traits/CreateFromObjectArray.trait.php',
+    'Dplus\\Base\\Curl' => $baseDir . '/src/Curl.class.php',
+    'Dplus\\Base\\DplusDateTime' => $baseDir . '/src/DplusDateTime.class.php',
+    'Dplus\\Base\\Filterable' => $baseDir . '/src/traits/Filterable.trait.php',
+    'Dplus\\Base\\HTTPAuthentication' => $baseDir . '/src/Curl.class.php',
+    'Dplus\\Base\\HTTPAuthentication_Oauth2' => $baseDir . '/src/Curl.class.php',
+    'Dplus\\Base\\MagicMethodTraits' => $baseDir . '/src/traits/MagicMethods.trait.php',
+    'Dplus\\Base\\QueryBuilder' => $baseDir . '/src/QueryBuilder.class.php',
+    'Dplus\\Base\\StringerBell' => $baseDir . '/src/Stringer.class.php',
+    'Dplus\\Base\\ThrowErrorTrait' => $baseDir . '/src/traits/ThrowError.trait.php',
 );

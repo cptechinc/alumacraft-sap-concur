@@ -1,7 +1,7 @@
 <?php
     ini_set('max_execution_time', 240);
     header('Content-Type: application/json');
-    $sap = new ConcurFactory();
+    $sap = new Dplus\SapConcur\ConcurFactory();
     $endpoint = $sap->create_endpoint('vendor');
     $action = $input->get->text('action');
     $response = array(
@@ -29,7 +29,5 @@
             $response['response'] = $endpoint->batch_vendors();
             break;
     }
-    
-    
     $response['end'] = date('m/d/Y H:i A');
     echo json_encode($response);

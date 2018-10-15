@@ -1,5 +1,5 @@
 <?php 
-	namespace dplus\sapconcur;
+	namespace Dplus\SapConcur;
 	
 	/**
 	 * Class for getting Authentication through Concur's API
@@ -28,7 +28,7 @@
 		 * @return array        Response from Endpoint or response from cURL
 		 */
 		protected function curl_post($url, $body) {
-			$curl = new \Curl();
+			$curl = new \Dplus\Base\Curl();
 			$curl->add_acceptheader('json');
 			$curl->set_contenttype('url');
 			return $curl->post($url, $body);
@@ -48,7 +48,6 @@
 				'password' => $appconfig->concur_password,
 				'credtype '=>'password',
 			];
-			
 			$this->response = $this->curl_post($this->endpoints['authentication'], $body);
 			$this->accesstoken = $this->response['server']['error'] ? false : $this->response['response']['access_token'];
 			self::$authtoken = $this->response['server']['error'] ? false : $this->response['response']['access_token'];

@@ -114,13 +114,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cptechinc/dplus-base.git",
-                "reference": "4ce7528e905ab03b46c8ac98312c61e3f564fcf6"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/cptechinc/dplus-base/zipball/4ce7528e905ab03b46c8ac98312c61e3f564fcf6",
-                "reference": "4ce7528e905ab03b46c8ac98312c61e3f564fcf6",
-                "shasum": ""
+                "reference": "5865837f7ae1b64a43697ba39224aefea70391e7"
             },
             "require": {
                 "atk4/dsql": "1.1"
@@ -134,7 +128,6 @@
                     "src/utfport.php"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "authors": [
                 {
                     "name": "Paul Gomez",
@@ -155,7 +148,7 @@
                 "dplus-attributes",
                 "dplus-base"
             ],
-            "time": "2018-10-04T18:20:02+00:00"
+            "time": "2018-10-11T16:20:21+00:00"
         },
         {
             "name": "cptechinc/dplus-sapconcur",
@@ -163,12 +156,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cptechinc/dplus-sapconcur.git",
-                "reference": "966cf20f2d8a2da2376cc89e4ee05f6f6640285c"
+                "reference": "0fcade83369ece23cbdd416bec56959a6760c175"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cptechinc/dplus-sapconcur/zipball/966cf20f2d8a2da2376cc89e4ee05f6f6640285c",
-                "reference": "966cf20f2d8a2da2376cc89e4ee05f6f6640285c",
+                "url": "https://api.github.com/repos/cptechinc/dplus-sapconcur/zipball/0fcade83369ece23cbdd416bec56959a6760c175",
+                "reference": "0fcade83369ece23cbdd416bec56959a6760c175",
                 "shasum": ""
             },
             "require": {
@@ -178,7 +171,7 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "dplus\\sapconcur\\": "src/"
+                    "Dplus\\SapConcur\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -203,7 +196,7 @@
                 "dplus-sap-concur",
                 "sap-concur"
             ],
-            "time": "2018-10-04T17:27:03+00:00"
+            "time": "2018-10-11T15:52:14+00:00"
         },
         {
             "name": "jeremykendall/php-domain-parser",

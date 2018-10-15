@@ -1,5 +1,5 @@
 <?php 
-	namespace dplus\sapconcur;
+	namespace Dplus\SapConcur;
 	
 	/**
 	 * Class to handle dealing with Vendors 
@@ -79,10 +79,10 @@
 			$updatedafter = $forceupdates ? date('Y-m-d', strtotime('-1 days')) : '';
 			$existingvendors = get_vendorIDsinsendlog($updatedafter);
 			$newvendors = get_vendorIDsnotinsendlog();
-			
 			$response = array(
+				'updates' => $existingvendors,
 				'updated' => $this->update_vendors($existingvendors),
-				//'created' => $this->create_vendors($newvendors)
+				'created' => $this->create_vendors($newvendors)
 			);
 			$this->response = $response;
 			return $this->response;
@@ -112,7 +112,7 @@
 		 * @return array       Response
 		 */
 		public function get_vendors($url = '') {
-			$url = !empty($url) ? new Purl\Url($url) : new Purl\Url($this->endpoints['vendor']);
+			$url = !empty($url) ? new \Purl\Url($url) : new \Purl\Url($this->endpoints['vendor']);
 			$url->query->set('limit', '1000');
 			$body = '';
 			return $this->get_curl($url->getUrl(), $body);
@@ -139,7 +139,7 @@
 		 * @return array            Response
 		 */
 		public function get_vendor($vendorID) {
-			$url = new Purl\Url($this->endpoints['vendor']);
+			$url = new \Purl\Url($this->endpoints['vendor']);
 			$url->query->set('vendorCode', $vendorID);
 			$response = $this->curl_get($url->getUrl());
 			return $response['response'];
@@ -165,7 +165,7 @@
 			$dbvendor = get_dbvendor($vendorID);
 			$vendor = $this->create_sectionarray($this->structure['header'], $dbvendor);
 			$body = $this->create_vendorsendbody($vendor);
-			$response = $this->post_curl($this->endpoints['vendor'], $body);
+			$response = $this->curl_post($this->endpoints['vendor'], $body);
 			return $response['response'];
 		}
 		
@@ -178,6 +178,7 @@
 			$dbvendor = get_dbvendor($vendorID);
 			$vendor = $this->create_sectionarray($this->structure['header'], $dbvendor);
 			$body = $this->create_vendorsendbody($vendor);
+			$body['Items'] = array();
 			$response = $this->curl_put($this->endpoints['vendor'], $body);
 			return $response['response'];
 		}
@@ -222,7 +223,7 @@
 			$body['Items'][] = $vendor;
 			$body['TotalCount'] = 1;
 			$body['Vendor'][] = $vendor;
-			return $vendor;
+			return $body;
 		}
 		
 		/**
@@ -247,7 +248,7 @@
 		protected function create_vendors($vendorIDs) {
 			$response = array();
 			
-			foreach ($vendorIDs as $dbvendor) {
+			foreach ($vendorIDs as $vendorID) {
 				$response[] = $this->create_vendor($vendorID);
 			}
 			return $response;

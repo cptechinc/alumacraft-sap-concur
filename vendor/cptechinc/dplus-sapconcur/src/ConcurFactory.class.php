@@ -1,12 +1,12 @@
 <?php 
-	namespace dplus\sapconcur;
+	namespace Dplus\SapConcur;
 	
 	/**
 	 * Factory to instatiate Concur Endpoint classes, also provides them with the Access token needed
 	 */
 	Class ConcurFactory {
-		use \dplus\base\MagicMethodTraits;
-		use \dplus\base\ThrowErrorTrait;
+		use \Dplus\Base\MagicMethodTraits;
+		use \Dplus\Base\ThrowErrorTrait;
 		
 		/**
 		 * Is there an Error
@@ -52,7 +52,7 @@
 		 */
 		public function create_endpoint($endpoint) {
 			if (in_array($endpoint, array_keys($this->endpoints))) {
-				$class = $this->endpoints[$endpoint];
+				$class = "Dplus\SapConcur\\".$this->endpoints[$endpoint];
 				return new $class();
 			} else {
 				$this->error("Endpoint $endpoint does not exist");
