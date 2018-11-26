@@ -16,15 +16,15 @@
             $trace = debug_backtrace();
             $caller = next($trace); 
             $class = get_class($this);
-			$error = (strpos($error, "DPLUSO [$class]: ") !== 0 ? "DPLUSO [$class]: " . $error : $error);
+			$error = (strpos($error, "DPLUS [$class]: ") !== 0 ? "DPLUS [$class]: " . $error : $error);
+            $error .= PHP_EOL;
+			$error .= PHP_EOL;
             
-            
-            if (isset($caller['file'])) {
+			if (isset($caller['file'])) {
                 $error .= $caller['function'] . " called from " . $caller['file'] . " on line " . $caller['line'];
             } else {
                 $error .= "Property may be trying to be loaded from database";
             }
-            
 			trigger_error($error, $level);
 			return;
 		}

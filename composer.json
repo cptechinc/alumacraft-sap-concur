@@ -35,10 +35,19 @@
         "ext-gd": "*",
         "jwage/purl": "dev-cptechinc",
         "atk4/dsql": "1.1",
-        "cptechinc/dplus-base": "dev-psr4",
-        "cptechinc/dplus-sapconcur": "dev-master"
+        "cptechinc/dplus-base": "dev-master",
+        "cptechinc/dplus-processwire": "dev-master",
+        "cptechinc/dplus-file-services": "dev-master",
+        "cptechinc/dplus-sapconcur": "dev-master",
+        "cache/simple-cache-bridge": "^1.1@dev",
+        "cache/apcu-adapter": "^1.1@dev"
     },
     "autoload": {
-        "files": [ "wire/core/ProcessWire.php" ]
+        "files": [ 
+            "wire/core/ProcessWire.php",
+            "vendor/cptechinc/dplus-base/vendor/autoload.php",
+            "vendor/cptechinc/dplus-file-services/vendor/autoload.php",
+            "vendor/cptechinc/dplus-sapconcur/vendor/autoload.php"
+        ]
     }
 }

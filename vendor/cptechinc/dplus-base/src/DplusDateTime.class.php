@@ -18,7 +18,7 @@
 	 * @return string                Time Formatted
 	 */
 		public static function format_dplustime($time, $currentformat = 'Hi', $desiredformat = 'h:i A') {
-			$formatted = DateTime::createFromFormat($currentformat, $time);
+			$formatted = \DateTime::createFromFormat($currentformat, $time);
 			return $formatted->format($desiredformat);
 		}
 

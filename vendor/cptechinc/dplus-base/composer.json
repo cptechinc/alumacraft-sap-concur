@@ -26,7 +26,8 @@
 			"Dplus\\Base\\": "src/"
 		},
 		"files":[
-			"src/utfport.php"
+            "src/utfport.php",
+            "src/ModelClass.class.php"
 		]
 	}
 }

@@ -1,6 +1,11 @@
 <?php
 	namespace Dplus\Base;
 	
+	use Dplus\Content\HTMLWriter;
+	
+	/**
+	 * Class for dealing with Strings
+	 */
 	class StringerBell {
 		/**
 		 * Checks to see if string is in a phone format
@@ -62,6 +67,7 @@
 		}
 
 		/**
+		 * // NOTE THIS FUNCTION WILL BE MOVED TO Dplus\Content\HTMLWriter
 		 * Takes string and gives it a span of highlight to give it a highlighted look on the page
 		 * @param  string $haystack the string to look through
 		 * @param  string $needle   the word to look for
@@ -141,5 +147,15 @@
 				'#' => ''
 			);
 			return urlencode(str_replace(array_keys($replace), array_values($replace), $str));
+		}
+
+		/**
+		 * Returns true if $needle is a substring of $haystack
+		 * @param  string $needle   Possbile Substring 
+		 * @param  string $haystack String to find Substring in
+		 * @return bool             Is needle found in haystack?
+		 */
+		public function contains($needle, $haystack) {
+			return strpos($haystack, $needle) !== false;
 		}
 	}

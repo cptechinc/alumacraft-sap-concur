@@ -80,7 +80,6 @@
 			$existingvendors = get_vendorIDsinsendlog($updatedafter);
 			$newvendors = get_vendorIDsnotinsendlog();
 			$response = array(
-				'updates' => $existingvendors,
 				'updated' => $this->update_vendors($existingvendors),
 				'created' => $this->create_vendors($newvendors)
 			);
@@ -165,7 +164,12 @@
 			$dbvendor = get_dbvendor($vendorID);
 			$vendor = $this->create_sectionarray($this->structure['header'], $dbvendor);
 			$body = $this->create_vendorsendbody($vendor);
-			$response = $this->curl_post($this->endpoints['vendor'], $body);
+			$this->response = $this->curl_post($this->endpoints['vendor'], $body);
+			$this->response['response']['vendorID'] = $vendorID;
+			$this->process_response();
+			if (!$response['response']['error']) {
+				$this->log_sendlogvendor($vendorID) ;
+			}
 			return $response['response'];
 		}
 		
@@ -179,13 +183,29 @@
 			$vendor = $this->create_sectionarray($this->structure['header'], $dbvendor);
 			$body = $this->create_vendorsendbody($vendor);
 			$body['Items'] = array();
-			$response = $this->curl_put($this->endpoints['vendor'], $body);
-			return $response['response'];
+			$this->response = $this->curl_put($this->endpoints['vendor'], $body);
+			$this->response['response']['vendorID'] = $vendorID;
+			$this->process_response();
+			if (!$this->response['response']['error']) {
+				$this->log_sendlogvendor($vendorID) ;
+			}
+			return $this->response['response'];
 		}
 		
 		/* =============================================================
 			INTERNAL CLASS FUNCTIONS
 		============================================================ */
+		protected function process_response($response) {
+			if (strpos(strtolower($this->response['response']['Message']), 'missing' !== false)) {
+				$this->response['response']['error'] = true;
+				$this->log_error($this->response['response']['Message']);
+			} elseif (isset($response['response']['Vendor'][0]['StatusList'][0])) {
+				if ($response['response']['Vendor'][0]['StatusList'][0]['Type'] == 'WARNING') {
+					$this->response['response']['error'] = true;
+					$this->log_error($response['response']['Vendor'][0]['StatusList'][0]['Message']);
+				}
+			}
+		}
 		/**
 		 * Adds or Updates send log for an Vendor ID
 		 * @param  string $vendorID Vendor ID
@@ -232,12 +252,14 @@
 		 * @return array             Response
 		 */
 		protected function update_vendors(array $vendorIDs) {
-			$response = array();
+			$responses = array();
 			
 			foreach ($vendorIDs as $vendorID) {
-				$response[] = $this->update_vendor($vendorID);
+				$vend_response = $this->update_vendor($vendorID);
+				$category = $vend_response['error'] ? 'error' : 'success';
+				$responses[$category][] = $vend_response;
 			}
-			return $response;
+			return $responses;
 		}
 		
 		/**
@@ -249,7 +271,9 @@
 			$response = array();
 			
 			foreach ($vendorIDs as $vendorID) {
-				$response[] = $this->create_vendor($vendorID);
+				$vend_response = $this->create_vendor($vendorID);
+				$category = $vend_response['response']['error'] ? 'error' : 'success';
+				$responses[$category][] = $vend_response;
 			}
 			return $response;
 		}

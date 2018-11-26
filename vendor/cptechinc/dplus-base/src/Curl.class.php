@@ -264,7 +264,7 @@
             $type = strtolower($type);
             
             if (in_array($type, self::$types)) {
-                $class = "Dplus\Base\\"."HTTPAuthentication_".ucfirst($type);
+                $class = __NAMESPACE__."\HTTPAuthentication_".ucfirst($type);
                 return new $class();
             } else {
                 $httpauth = new HTTPAuthentication();

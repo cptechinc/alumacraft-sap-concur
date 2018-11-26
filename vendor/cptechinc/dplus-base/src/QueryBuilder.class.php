@@ -72,7 +72,7 @@
                                 $this->where($this->expr("DATE($filter) = STR_TO_DATE([], '%m/%d/%Y')", $filtervalue));
                             } elseif ($filtertypes[$filter]['datatype'] == 'date') {
                                 $dateformat = $this->generate_dateformat($filter, $filtertypes);
-                                $this->where($this->expr("STR_TO_DATE($filter, '$dateformat') BETWEEN STR_TO_DATE([], '%m/%d/%Y') AND STR_TO_DATE([], '%m/%d/%Y')", $filtervalue));
+                                $this->where($this->expr("STR_TO_DATE($filter, '$dateformat') = STR_TO_DATE([], '%m/%d/%Y')", $filtervalue));
                             } else if ($filtertypes[$filter]['datatype'] == 'numeric') {
                                 $this->where($this->expr("$filter = CAST([] AS DECIMAL) ", $filtervalue));
                             } else {

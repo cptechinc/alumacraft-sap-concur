@@ -18,4 +18,5 @@ return array(
     'Dplus\\Base\\QueryBuilder' => $baseDir . '/src/QueryBuilder.class.php',
     'Dplus\\Base\\StringerBell' => $baseDir . '/src/Stringer.class.php',
     'Dplus\\Base\\ThrowErrorTrait' => $baseDir . '/src/traits/ThrowError.trait.php',
+    'Dplus\\Base\\Validator' => $baseDir . '/src/Validator.class.php',
 );

@@ -1,0 +1,20 @@
+language: php
+
+php:
+  - 5.4
+  - 5.5
+  - 5.6
+  - 7.0
+
+cache:
+  directories:
+    - $HOME/.composer/cache
+    - vendor
+
+install:
+  - composer install
+
+script:
+  - composer run-script test-build
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --format=php-clover coverage.clover

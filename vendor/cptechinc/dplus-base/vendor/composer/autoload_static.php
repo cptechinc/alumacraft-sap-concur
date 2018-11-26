@@ -8,6 +8,7 @@ class ComposerStaticInit88cf2e8d27212994237a95cfcf23603b
 {
     public static $files = array (
         '31598dbb6e918e6fea9d130ff4f8032b' => __DIR__ . '/../..' . '/src/utfport.php',
+        '8845652c5d5e4c37c838e2913d6107f4' => __DIR__ . '/../..' . '/src/ModelClass.class.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -37,6 +38,7 @@ class ComposerStaticInit88cf2e8d27212994237a95cfcf23603b
         'Dplus\\Base\\QueryBuilder' => __DIR__ . '/../..' . '/src/QueryBuilder.class.php',
         'Dplus\\Base\\StringerBell' => __DIR__ . '/../..' . '/src/Stringer.class.php',
         'Dplus\\Base\\ThrowErrorTrait' => __DIR__ . '/../..' . '/src/traits/ThrowError.trait.php',
+        'Dplus\\Base\\Validator' => __DIR__ . '/../..' . '/src/Validator.class.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

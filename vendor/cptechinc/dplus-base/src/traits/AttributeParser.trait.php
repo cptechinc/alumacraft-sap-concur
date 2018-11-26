@@ -18,7 +18,10 @@
                 $values = explode('|', $vars);
                 foreach ($values as $value) {
                     $pieces = explode('=', $value);
-                    $attributesarray[array_shift($pieces)] = implode('=', $pieces);
+                    if (!empty($pieces[0])) {
+                        $attributesarray[array_shift($pieces)] = implode('=', $pieces);
+                    }
+                    
                 }
             }
             
@@ -49,6 +52,14 @@
 		 * @return string pipe delimited representation of the ajax data ex data-focus=#this|data-loadinto=
 		 */
 		protected function generate_ajaxdataforcontento() {
+			return str_replace(' ', '|', str_replace("'", "", str_replace('"', '', $this->ajaxdata)));
+		}
+        
+        /** 
+		 * Takes the $this->ajaxdata string and formats it for HTMLMaker
+		 * @return string pipe delimited representation of the ajax data [ex. data-focus=#this|data-loadinto=]
+		 */
+		protected function generate_ajaxdataforhtmlmaker() {
 			return str_replace(' ', '|', str_replace("'", "", str_replace('"', '', $this->ajaxdata)));
 		}
 		

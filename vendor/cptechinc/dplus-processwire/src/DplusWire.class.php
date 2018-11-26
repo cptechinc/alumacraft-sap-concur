@@ -1,4 +1,6 @@
 <?php 
+	namespace Dplus\ProcessWire;
+	
 	/**
 	 * Static Class that will load Processwire's wire() function into my classes
 	 * so that php-integrator will catch it and not mark function calls as errors

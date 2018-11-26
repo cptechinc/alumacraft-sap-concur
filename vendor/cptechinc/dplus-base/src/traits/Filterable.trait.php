@@ -1,12 +1,15 @@
 <?php
 	namespace Dplus\Base;
-	use \ProcessWire\WireInput;
 	
+	use ProcessWire\WireInput;
+	/**
+	 * Functions that allow filtering of data through Arrays
+	 */
 	trait Filterable {
 		/**
 		 * Looks through the $input->get for properties that have the same name
 		 * as filterable properties, then we populate $this->filter with the key and value
-		 * @param  \ProcessWire\WireInput $input Use the get property to get at the $_GET[] variables
+		 * @param  WireInput $input Use the get property to get at the $_GET[] variables
 		 */
 		public function generate_filter(WireInput $input) {
 			if (!$input->get->filter) {
@@ -14,16 +17,19 @@
 			} else {
 				$this->filters = array();
 				foreach ($this->filterable as $filter => $type) {
-					if (!empty($input->get->$filter)) {
+					if (!empty($input->get->$filter)) { // IF WE HAVE FILTERS IN THE GET ARRAY
 						if (!is_array($input->get->$filter)) {
 							$value = $input->get->text($filter);
 							$this->filters[$filter] = explode('|', $value);
 						} else {
-							$this->filters[$filter] = $input->get->$filter;
-						}
-					} elseif (is_array($input->get->$filter)) {
-						if (strlen($input->get->$filter[0])) {
-							$this->filters[$filter] = $input->get->$filter;
+							if (strlen($input->get->$filter[0])) {
+								for ($i = 0; $i < sizeof($input->get->$filter); $i++) {
+									if (empty($input->get->$filter[$i])) {
+										unset($input->get->$filter[$i]);
+									}
+								}
+								$this->filters[$filter] = $input->get->$filter;
+							}
 						}
 					}
 				}
@@ -34,7 +40,7 @@
 		/**
 		 * Looks through the $input->get for properties that have the same name
 		 * as filterable properties, then we populate $this->filter with the key and value
-		 * @param  \ProcessWire\WireInput $input Use the get property to get at the $_GET[] variables
+		 * @param  WireInput $input Use the get property to get at the $_GET[] variables
 		 */
 		public function generate_defaultfilter(WireInput $input) {
 			if (!$input->get->filter) {
@@ -42,16 +48,19 @@
 			} else {
 				$this->filters = array();
 				foreach ($this->filterable as $filter => $type) {
-					if (!empty($input->get->$filter)) {
+					if (!empty($input->get->$filter)) { // IF WE HAVE FILTERS IN THE GET ARRAY
 						if (!is_array($input->get->$filter)) {
 							$value = $input->get->text($filter);
 							$this->filters[$filter] = explode('|', $value);
 						} else {
-							$this->filters[$filter] = $input->get->$filter;
-						}
-					} elseif (is_array($input->get->$filter)) {
-						if (strlen($input->get->$filter[0])) {
-							$this->filters[$filter] = $input->get->$filter;
+							if (strlen($input->get->$filter[0])) {
+								for ($i = 0; $i < sizeof($input->get->$filter); $i++) {
+									if (empty($input->get->$filter[$i])) {
+										unset($input->get->$filter[$i]);
+									}
+								}
+								$this->filters[$filter] = $input->get->$filter;
+							}
 						}
 					}
 				}
