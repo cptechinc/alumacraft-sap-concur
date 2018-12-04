@@ -1,8 +1,0 @@
-.idea/
-coverage/
-.DS_Store
-clover.xml
-.scrutinizer.yml
-scrutinizer.phar
-/vendor/*
-/composer.lock
