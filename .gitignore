@@ -10,7 +10,8 @@ dw_php_codehinting.config
 .ftpignore
 site/config.php
 project.cson
-vendor/composer
+vendor
+
 
 # Processwire Directories
 site/modules
