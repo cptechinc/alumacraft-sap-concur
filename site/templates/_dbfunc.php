@@ -278,6 +278,7 @@
 	
 	/**
 	 * Returns Purchase Order Numbers that are in the sendlog
+	 * // NOTE checks that Purchase Order exists in po_head
 	 * @param  int    $limit Number of Records to return
 	 * @param  string $ponbr PO Number to start after
 	 * @param  bool   $debug Run in debug? If so, return SQL Query
@@ -286,9 +287,12 @@
 	function get_dbpurchaseordernbrsinsendlog($limit = 0, $ponbr = '', $debug = false) {
 		$q  = (new QueryBuilder())->table('sendlog_po');
 		$q->field('PurchaseOrderNumber');
+		$poquery = (new QueryBuilder())->table('po_head');
+		$poquery->field('PurchaseOrderNumber');
+		$q->where('PurchaseOrderNumber', 'in', $poquery);
 		if (!empty($ponbr)) {
 			$q->where('PurchaseOrderNumber', '>', $ponbr);
-		} 
+		}
 		if (!(empty($limit))) {
 			$q->limit($limit);
 		}
@@ -439,8 +443,14 @@
 	 * @return array          One Dimenisonal array e.g. ('1004', '1005')
 	 */
 	function get_dbdistinctreceiptponbrs($limit = 0, $ponbr = '', $debug = false) {
+		$detail_query = (new QueryBuilder())->table('po_detail');
+		$detail_query->field('PurchaseOrderNumber');
+		$detail_query->field('LineNumber');
+		
 		$q = (new QueryBuilder())->table('po_receipts');
 		$q->field($q->expr("DISTINCT(PurchaseOrderNumber)"));
+		$q->where('(PurchaseOrderNumber, LineNumber)', 'in', $detail_query);
+		
 		if (!empty($ponbr)) {
 			$q->where('PurchaseOrderNumber', '>', $ponbr);
 		} 
@@ -465,9 +475,15 @@
 	 * @return array         One-dimensional array of all the Purchase Order line numbers e.g (1, 2, 4)
 	 */
 	function get_dbreceiptslinenbrs($ponbr, $debug = false) {
+		$detail_query = (new QueryBuilder())->table('po_detail');
+		$detail_query->field('LineNumber');
+		$detail_query->where('PurchaseOrderNumber', $ponbr);
+		
 		$q = (new QueryBuilder())->table('po_receipts');
 		$q->field('LineNumber');
 		$q->where('PurchaseOrderNumber', $ponbr);
+		$q->where('LineNumber', 'in', $detail_query);
+		
 		$sql = DplusWire::wire('database')->prepare($q->render());
 		
 		if ($debug) {
