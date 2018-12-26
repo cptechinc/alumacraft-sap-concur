@@ -8,7 +8,6 @@
         'response' => false,
         'end' => ''
     );
-$response['response'] = $endpoint->create_authenticationtoken();
-$response['authtoken'] = Dplus\SapConcur\Concur_Authentication::$authtoken;
+$response['response'] = get_dbpurchaseordernbrsinsendlog(100, '312888', true);
 $response['end'] = date('m/d/Y H:i A');
 echo json_encode($response);

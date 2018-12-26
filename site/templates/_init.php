@@ -19,3 +19,6 @@ $page->fullURL->path = '';
 if (!empty($config->filename) && $config->filename != '/') {
 	$page->fullURL->join($config->filename);
 }
+
+
+$sap = new Dplus\SapConcur\ConcurFactory();

@@ -526,15 +526,15 @@
 	 */
 	function does_dbinvoiceexist($invnbr, $debug = false) {
 		$q = (new QueryBuilder())->table('ap_invc_head');
-		$q->field($q->expr('IF(COUNT(*) > 0, 1, 0)'));
+		$q->field($q->expr('IF(COUNT(*) > 0, 1, 0) AS count'));
 		$q->where('InvoiceNumber', $invnbr);
 		$sql = DplusWire::wire('database')->prepare($q->render());
 		
 		if ($debug) {
-			return $q->generate_sqlquery();
+			return $q->render_sqlquery();
 		} else {
 			$sql->execute($q->params);
-			return $sql->fetchColumn();
+			return boolval($sql->fetchColumn());
 		}
 	}
 	
@@ -548,11 +548,11 @@
 		$q = (new QueryBuilder())->table('ap_invc_head');
 		$q->mode('insert');
 		$columns = array_keys($invoice);
-		
+		$invnbr = $invoice['InvoiceNumber'];
 		foreach ($invoice as $column => $value) {
 			$q->set($column, $value);
 		}
-		
+
 		$sql = DplusWire::wire('database')->prepare($q->render());
 		if ($debug) {
 			return $q->generate_sqlquery();
@@ -572,11 +572,13 @@
 		$q = (new QueryBuilder())->table('ap_invc_head');
 		$q->mode('update');
 		$columns = array_keys($invoice);
+		$invnbr = $invoice['InvoiceNumber'];
+		unset($invoice['InvoiceNumber']);
 		
 		foreach ($invoice as $column => $value) {
 			$q->set($column, $value);
 		}
-		$q->where('InvoiceNumber', $invoice['InvoiceNumber']);
+		$q->where('InvoiceNumber', "$invnbr");
 		
 		$sql = DplusWire::wire('database')->prepare($q->render());
 		if ($debug) {
@@ -596,7 +598,7 @@
 	 */
 	function does_dbinvoicelineexist($invnbr, $linenbr, $debug = false) {
 		$q = (new QueryBuilder())->table('ap_invc_detail');
-		$q->field($q->expr('IF(COUNT(*) > 0, 1, 0)'));
+		$q->field($q->expr('IF(COUNT(*) > 0, 1, 0) AS count'));
 		$q->where('InvoiceNumber', $invnbr);
 		$q->where('RequestLineItemNumber', $linenbr);
 		$sql = DplusWire::wire('database')->prepare($q->render());
@@ -605,7 +607,7 @@
 			return $q->generate_sqlquery();
 		} else {
 			$sql->execute($q->params);
-			return $sql->fetchColumn();
+			return boolval($sql->fetchColumn());
 		}
 	}
 	
@@ -652,6 +654,7 @@
 		$q->where('InvoiceNumber', $invnbr);
 		$q->where('RequestLineItemNumber', $invoiceline['RequestLineItemNumber']);
 		$sql = DplusWire::wire('database')->prepare($q->render());
+		
 		if ($debug) {
 			return $q->generate_sqlquery();
 		} else {
