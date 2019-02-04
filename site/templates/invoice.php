@@ -23,12 +23,22 @@
                 $response['response'] = $endpoint->get_invoice($invoicenbr);
                 break;
             case 'get-invoices-after':
-                $date = $input->get->text('date');
+                // If date is today or empty, then date is 2 days before today
+                if (empty($input->get->date) || $input->get->text('date') == 'today') {
+                    $date = date('Y-m-d', strtotime('-2 days'));
+                } else {
+                    $date = $input->get->text('date');
+                }
                 $response['response'] = $endpoint->get_invoices_created_after($date);
                 break;
             case 'get-invoices-before':
-                $date = $input->get->text('date');
-                $response['response'] = $endpoint->get_invoicescreatedbefore($date);
+                // If date is today or empty, then date is 2 days before today
+                if (empty($input->get->date) || $input->get->text('date') == 'today') {
+                    $date = date('Y-m-d', strtotime('-2 days'));
+                } else {
+                    $date = $input->get->text('date');
+                }
+                $response['response'] = $endpoint->get_invoices_created_before($date);
                 break;
         }
         $response['end'] = date('m/d/Y H:i A');

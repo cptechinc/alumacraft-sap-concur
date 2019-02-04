@@ -161,7 +161,6 @@
 			$q->where($q->expr('DATE(updated)'), '<', $updatedafter);
 			$q->where($q->expr('DATE(date)'), '>', $updatedafter);
 		}
-		$q->limit(200);
 		$sql = DplusWire::wire('database')->prepare($q->render());
 		
 		if ($debug) {
