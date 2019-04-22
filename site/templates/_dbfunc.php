@@ -844,3 +844,20 @@
 			return $sql->fetch(PDO::FETCH_ASSOC);
 		}
 	}
+	
+	
+	function insert_errorlog($endpoint, $message, $date, $debug = false) {
+		$q = (new QueryBuilder())->table('log_error');
+		$q->mode('insert');
+		$q->set('date', $date);
+		$q->set('endpoint', $endpoint);
+		$q->set('message', $message);
+		$sql = DplusWire::wire('database')->prepare($q->render());
+		
+		if ($debug) {
+			return $q->generate_sqlquery();
+		} else {
+			$sql->execute($q->params);
+			return boolval(DplusWire::wire('database')->lastInsertId());
+		}
+	}
